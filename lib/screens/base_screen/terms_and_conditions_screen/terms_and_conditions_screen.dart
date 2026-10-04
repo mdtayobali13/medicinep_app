@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod_template/constant/app_colors.dart';
-import 'package:flutter_riverpod_template/screens/base_screen/terms_and_conditions_screen/provider/terms_and_conditions_screen_provider.dart';
-import 'package:flutter_riverpod_template/screens/base_screen/widgets/base_data_widget.dart';
-import 'package:flutter_riverpod_template/screens/base_screen/widgets/base_no_found_data_widget.dart';
-import 'package:flutter_riverpod_template/utils/app_size.dart';
-import 'package:flutter_riverpod_template/widgets/texts/app_text.dart';
+import 'package:medicine_system/constant/app_colors.dart';
+import 'package:medicine_system/screens/base_screen/terms_and_conditions_screen/provider/terms_and_conditions_screen_provider.dart';
+import 'package:medicine_system/screens/base_screen/widgets/base_data_widget.dart';
+import 'package:medicine_system/screens/base_screen/widgets/base_no_found_data_widget.dart';
+import 'package:medicine_system/utils/app_size.dart';
+import 'package:medicine_system/widgets/texts/app_text.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class TermsAndConditionsScreen extends StatelessWidget {

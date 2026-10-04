@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:flutter_riverpod_template/services/storage/storage_services.dart';
-import 'package:flutter_riverpod_template/utils/app_log.dart';
+import 'package:medicine_system/services/storage/storage_services.dart';
+import 'package:medicine_system/utils/app_log.dart';
 
 class ThemeNotifier extends StateNotifier<ThemeMode> {
   bool isDarkMode = false;
@@ -31,6 +31,15 @@ class ThemeNotifier extends StateNotifier<ThemeMode> {
       }
     } catch (e) {
       errorLog("toggleTheme", e);
+    }
+  }
+
+  void setDarkMode(bool enableDark) {
+    try {
+      state = enableDark ? ThemeMode.dark : ThemeMode.light;
+      storageServices.setDarkMode(enableDark);
+    } catch (e) {
+      errorLog("setDarkMode", e);
     }
   }
 }

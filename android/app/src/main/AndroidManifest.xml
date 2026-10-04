@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"   xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.medicinesystem.app" xmlns:tools="http://schemas.android.com/tools">
 
 <!-- permission start  -->
  <uses-permission android:name="android.permission.INTERNET"/>
@@ -7,7 +7,7 @@
 <!-- permission end  -->
    
     <application
-        android:label="flutter_riverpod_template"
+        android:label="Medicine System"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:enableOnBackInvokedCallback="true"

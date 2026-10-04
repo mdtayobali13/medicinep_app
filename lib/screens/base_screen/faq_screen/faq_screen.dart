@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod_template/screens/base_screen/faq_screen/providers/f_a_q_screen_provider.dart';
-import 'package:flutter_riverpod_template/screens/base_screen/faq_screen/widgets/faq_card.dart';
-import 'package:flutter_riverpod_template/screens/base_screen/faq_screen/widgets/faq_card_loader.dart';
-import 'package:flutter_riverpod_template/utils/app_size.dart';
-import 'package:flutter_riverpod_template/widgets/texts/app_text.dart';
+import 'package:medicine_system/screens/base_screen/faq_screen/providers/f_a_q_screen_provider.dart';
+import 'package:medicine_system/screens/base_screen/faq_screen/widgets/faq_card.dart';
+import 'package:medicine_system/screens/base_screen/faq_screen/widgets/faq_card_loader.dart';
+import 'package:medicine_system/utils/app_size.dart';
+import 'package:medicine_system/widgets/texts/app_text.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class FaqScreen extends StatelessWidget {

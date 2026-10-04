@@ -1,5 +1,5 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_riverpod_template/utils/app_log.dart';
+import 'package:medicine_system/utils/app_log.dart';
 
 class AppApiUrl {
   AppApiUrl._privateConstructor();

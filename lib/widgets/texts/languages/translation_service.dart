@@ -1,8 +1,8 @@
-import 'package:flutter_riverpod_template/utils/app_log.dart';
-import 'package:flutter_riverpod_template/utils/language/en_en_language.dart';
-import 'package:flutter_riverpod_template/widgets/texts/languages/translation_cache.dart';
+import 'package:medicine_system/utils/app_log.dart';
+import 'package:medicine_system/utils/language/en_en_language.dart';
+import 'package:medicine_system/widgets/texts/languages/translation_cache.dart';
 import 'package:translator/translator.dart';
-import 'package:flutter_riverpod_template/utils/language/language_data.dart';
+import 'package:medicine_system/utils/language/language_data.dart';
 
 class TranslationService {
   TranslationService._();

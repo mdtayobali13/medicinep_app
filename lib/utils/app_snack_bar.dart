@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod_template/constant/app_colors.dart';
-import 'package:flutter_riverpod_template/main_app_entry.dart';
-import 'package:flutter_riverpod_template/routes/app_routes.dart';
-import 'package:flutter_riverpod_template/utils/app_log.dart';
-import 'package:flutter_riverpod_template/utils/app_size.dart';
-import 'package:flutter_riverpod_template/widgets/texts/app_text.dart';
+import 'package:medicine_system/constant/app_colors.dart';
+import 'package:medicine_system/main_app_entry.dart';
+import 'package:medicine_system/routes/app_routes.dart';
+import 'package:medicine_system/utils/app_log.dart';
+import 'package:medicine_system/utils/app_size.dart';
+import 'package:medicine_system/widgets/texts/app_text.dart';
 
 class AppSnackBar {
   // -------- Singleton Setup --------

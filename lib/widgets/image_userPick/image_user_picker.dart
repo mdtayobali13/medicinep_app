@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod_template/main_app_entry.dart';
-import 'package:flutter_riverpod_template/utils/app_size.dart';
-import 'package:flutter_riverpod_template/utils/app_snack_bar.dart';
-import 'package:flutter_riverpod_template/utils/gap.dart';
-import 'package:flutter_riverpod_template/widgets/texts/app_text.dart';
+import 'package:medicine_system/main_app_entry.dart';
+import 'package:medicine_system/utils/app_size.dart';
+import 'package:medicine_system/utils/app_snack_bar.dart';
+import 'package:medicine_system/utils/gap.dart';
+import 'package:medicine_system/widgets/texts/app_text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 

@@ -1,25 +1,37 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod_template/error_handling_screen/error_screen/error_screen.dart';
-import 'package:flutter_riverpod_template/error_handling_screen/no_internet_screen/no_internet_screen.dart';
-import 'package:flutter_riverpod_template/error_handling_screen/not_found_screen/not_found_screen.dart';
-import 'package:flutter_riverpod_template/routes/app_routes_key.dart';
-import 'package:flutter_riverpod_template/routes/internet_check_provider.dart';
-import 'package:flutter_riverpod_template/screens/app_navigation/app_navigation_screen.dart';
-import 'package:flutter_riverpod_template/screens/auth_screen/forgot_screen/forgot_screen.dart';
-import 'package:flutter_riverpod_template/screens/auth_screen/on_board_screen/on_board_screen.dart';
-import 'package:flutter_riverpod_template/screens/auth_screen/sign_in_screen/sign_in_screen.dart';
-import 'package:flutter_riverpod_template/screens/auth_screen/sign_up_screen/sign_up_screen.dart';
-import 'package:flutter_riverpod_template/screens/auth_screen/sign_up_verify_screen/sign_up_verify_screen.dart';
-import 'package:flutter_riverpod_template/screens/base_screen/about_us_screen/about_us_screen.dart';
-import 'package:flutter_riverpod_template/screens/base_screen/faq_screen/faq_screen.dart';
-import 'package:flutter_riverpod_template/screens/base_screen/privacy_policy_screen/privacy_policy_screen.dart';
-import 'package:flutter_riverpod_template/screens/base_screen/terms_and_conditions_screen/terms_and_conditions_screen.dart';
-import 'package:flutter_riverpod_template/screens/home_screen/home_screen.dart';
-import 'package:flutter_riverpod_template/screens/profile_screen/profile_screen.dart';
-import 'package:flutter_riverpod_template/screens/splash_screen/splash_screen.dart';
-import 'package:flutter_riverpod_template/utils/app_log.dart';
+import 'package:medicine_system/error_handling_screen/error_screen/error_screen.dart';
+import 'package:medicine_system/error_handling_screen/no_internet_screen/no_internet_screen.dart';
+import 'package:medicine_system/error_handling_screen/not_found_screen/not_found_screen.dart';
+import 'package:medicine_system/routes/app_routes_key.dart';
+import 'package:medicine_system/routes/internet_check_provider.dart';
+import 'package:medicine_system/screens/app_navigation/app_navigation_screen.dart';
+import 'package:medicine_system/screens/auth_screen/forgot_screen/forgot_screen.dart';
+import 'package:medicine_system/screens/auth_screen/on_board_screen/on_board_screen.dart';
+import 'package:medicine_system/screens/auth_screen/sign_in_screen/sign_in_screen.dart';
+import 'package:medicine_system/screens/auth_screen/sign_up_screen/sign_up_screen.dart';
+import 'package:medicine_system/screens/auth_screen/sign_up_verify_screen/sign_up_verify_screen.dart';
+import 'package:medicine_system/screens/base_screen/about_us_screen/about_us_screen.dart';
+import 'package:medicine_system/screens/base_screen/faq_screen/faq_screen.dart';
+import 'package:medicine_system/screens/base_screen/privacy_policy_screen/privacy_policy_screen.dart';
+import 'package:medicine_system/screens/base_screen/terms_and_conditions_screen/terms_and_conditions_screen.dart';
+import 'package:medicine_system/screens/home_screen/home_screen.dart';
+import 'package:medicine_system/screens/profile_screen/profile_screen.dart';
+import 'package:medicine_system/screens/splash_screen/splash_screen.dart';
+import 'package:medicine_system/screens/designations_screen/designations_screen.dart';
+import 'package:medicine_system/screens/police_units_screen/police_units_screen.dart';
+import 'package:medicine_system/screens/medicine_categories_screen/medicine_categories_screen.dart';
+import 'package:medicine_system/screens/medicine_units_screen/medicine_units_screen.dart';
+import 'package:medicine_system/screens/medicine_screen/medicine_screen.dart';
+import 'package:medicine_system/screens/medicine_stocks_screen/medicine_stocks_screen.dart';
+import 'package:medicine_system/screens/patients_screen/patients_screen.dart';
+import 'package:medicine_system/screens/distributions_screen/distributions_screen.dart';
+import 'package:medicine_system/screens/stock_reports_screen/stock_reports_screen.dart';
+import 'package:medicine_system/screens/roles_screen/roles_screen.dart';
+import 'package:medicine_system/screens/users_screen/users_screen.dart';
+import 'package:medicine_system/screens/notifications_screen/notifications_screen.dart';
+import 'package:medicine_system/utils/app_log.dart';
 import 'package:go_router/go_router.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -79,7 +91,6 @@ class AppRoutes {
 
       GoRoute(path: "/${AppRoutesKey.instance.forgotScreen}", name: AppRoutesKey.instance.forgotScreen, builder: (context, state) => ForgotScreen()),
 
-      /////// main route screen
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return AppNavigationScreen(navigationShell: navigationShell);
@@ -94,18 +105,74 @@ class AppRoutes {
               ),
             ],
           ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: "/${AppRoutesKey.instance.profileScreen}",
-                name: AppRoutesKey.instance.profileScreen,
-                builder: (context, state) => ProfileScreen(),
-              ),
-            ],
-          ),
         ],
       ),
       /////// other screen
+      GoRoute(
+        path: "/${AppRoutesKey.instance.profileScreen}",
+        name: AppRoutesKey.instance.profileScreen,
+        builder: (context, state) => const ProfileScreen(),
+      ),
+      GoRoute(
+        path: "/${AppRoutesKey.instance.designationsScreen}",
+        name: AppRoutesKey.instance.designationsScreen,
+        builder: (context, state) => const DesignationsScreen(),
+      ),
+      GoRoute(
+        path: "/${AppRoutesKey.instance.policeUnitsScreen}",
+        name: AppRoutesKey.instance.policeUnitsScreen,
+        builder: (context, state) => const PoliceUnitsScreen(),
+      ),
+      GoRoute(
+        path: "/${AppRoutesKey.instance.medicineCategoriesScreen}",
+        name: AppRoutesKey.instance.medicineCategoriesScreen,
+        builder: (context, state) => const MedicineCategoriesScreen(),
+      ),
+      GoRoute(
+        path: "/${AppRoutesKey.instance.medicineUnitsScreen}",
+        name: AppRoutesKey.instance.medicineUnitsScreen,
+        builder: (context, state) => const MedicineUnitsScreen(),
+      ),
+      GoRoute(
+        path: "/${AppRoutesKey.instance.medicineScreen}",
+        name: AppRoutesKey.instance.medicineScreen,
+        builder: (context, state) => const MedicineScreen(),
+      ),
+      GoRoute(
+        path: "/${AppRoutesKey.instance.medicineStocksScreen}",
+        name: AppRoutesKey.instance.medicineStocksScreen,
+        builder: (context, state) => const MedicineStocksScreen(),
+      ),
+      GoRoute(
+        path: "/${AppRoutesKey.instance.patientsScreen}",
+        name: AppRoutesKey.instance.patientsScreen,
+        builder: (context, state) => const PatientsScreen(),
+      ),
+      GoRoute(
+        path: "/${AppRoutesKey.instance.distributionsScreen}",
+        name: AppRoutesKey.instance.distributionsScreen,
+        builder: (context, state) => const DistributionsScreen(),
+      ),
+      GoRoute(
+        path: "/${AppRoutesKey.instance.stockReportsScreen}",
+        name: AppRoutesKey.instance.stockReportsScreen,
+        builder: (context, state) => const StockReportsScreen(),
+      ),
+      GoRoute(
+        path: "/${AppRoutesKey.instance.rolesScreen}",
+        name: AppRoutesKey.instance.rolesScreen,
+        builder: (context, state) => const RolesScreen(),
+      ),
+      GoRoute(
+        path: "/${AppRoutesKey.instance.usersScreen}",
+        name: AppRoutesKey.instance.usersScreen,
+        builder: (context, state) => const UsersScreen(),
+      ),
+      GoRoute(
+        path: "/${AppRoutesKey.instance.notificationsScreen}",
+        name: AppRoutesKey.instance.notificationsScreen,
+        builder: (context, state) => const NotificationsScreen(),
+      ),
     ],
     errorBuilder: (context, state) {
       return NotFoundScreen();

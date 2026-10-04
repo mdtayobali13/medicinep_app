@@ -1,4 +1,4 @@
-package com.example.flutter_riverpod_template
+package com.medicinesystem.app
 
 import io.flutter.embedding.android.FlutterActivity
 

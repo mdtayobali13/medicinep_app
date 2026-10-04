@@ -3,9 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_riverpod_template/constant/app_colors.dart';
-import 'package:flutter_riverpod_template/main_app_entry.dart';
-import 'package:flutter_riverpod_template/utils/app_log.dart';
+import 'package:medicine_system/constant/app_colors.dart';
+import 'package:medicine_system/main_app_entry.dart';
+import 'package:medicine_system/utils/app_log.dart';
 
 Future<void> main() async {
   //////////////  flutter binding initialize

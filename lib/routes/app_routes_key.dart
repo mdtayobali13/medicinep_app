@@ -30,4 +30,16 @@ class AppRoutesKey {
   /////////////// app navigation
   final String homeScreen = "homeScreen";
   final String profileScreen = "profileScreen";
+  final String designationsScreen = "designationsScreen";
+  final String policeUnitsScreen = "policeUnitsScreen";
+  final String medicineCategoriesScreen = "medicineCategoriesScreen";
+  final String medicineUnitsScreen = "medicineUnitsScreen";
+  final String medicineScreen = "medicineScreen";
+  final String medicineStocksScreen = "medicineStocksScreen";
+  final String patientsScreen = "patientsScreen";
+  final String distributionsScreen = "distributionsScreen";
+  final String stockReportsScreen = "stockReportsScreen";
+  final String rolesScreen = "rolesScreen";
+  final String usersScreen = "usersScreen";
+  final String notificationsScreen = "notificationsScreen";
 }

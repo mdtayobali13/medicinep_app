@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod_template/constant/app_colors.dart';
-import 'package:flutter_riverpod_template/constant/app_constant.dart';
-import 'package:flutter_riverpod_template/utils/language/language_data.dart';
-import 'package:flutter_riverpod_template/widgets/texts/languages/language_provider.dart';
-import 'package:flutter_riverpod_template/widgets/texts/languages/translation_service.dart';
+import 'package:medicine_system/constant/app_colors.dart';
+import 'package:medicine_system/constant/app_constant.dart';
+import 'package:medicine_system/utils/language/language_data.dart';
+import 'package:medicine_system/widgets/texts/languages/language_provider.dart';
+import 'package:medicine_system/widgets/texts/languages/translation_service.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class AppText extends ConsumerWidget {
@@ -93,10 +93,10 @@ class AppText extends ConsumerWidget {
 
 // import 'package:flutter/material.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:flutter_riverpod_template/constant/app_colors.dart';
-// import 'package:flutter_riverpod_template/constant/app_constant.dart';
-// import 'package:flutter_riverpod_template/widgets/texts/languages/language_provider.dart';
-// import 'package:flutter_riverpod_template/widgets/texts/languages/translation_cache.dart';
+// import 'package:medicine_system/constant/app_colors.dart';
+// import 'package:medicine_system/constant/app_constant.dart';
+// import 'package:medicine_system/widgets/texts/languages/language_provider.dart';
+// import 'package:medicine_system/widgets/texts/languages/translation_cache.dart';
 // import 'package:translator/translator.dart';
 
 // class AppText extends ConsumerStatefulWidget {

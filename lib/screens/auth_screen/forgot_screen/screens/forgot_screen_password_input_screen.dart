@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod_template/constant/app_asserts_image_path.dart';
-import 'package:flutter_riverpod_template/constant/app_colors.dart';
-import 'package:flutter_riverpod_template/constant/app_constant.dart';
-import 'package:flutter_riverpod_template/utils/app_size.dart';
-import 'package:flutter_riverpod_template/utils/gap.dart';
-import 'package:flutter_riverpod_template/widgets/app_image/app_image.dart';
-import 'package:flutter_riverpod_template/widgets/buttons/app_button.dart';
-import 'package:flutter_riverpod_template/widgets/inputs/app_input_widget_tow.dart';
-import 'package:flutter_riverpod_template/widgets/texts/app_text.dart';
-import 'package:flutter_riverpod_template/screens/auth_screen/forgot_screen/screens/provider/forgot_reset_password_provider.dart';
+import 'package:medicine_system/constant/app_asserts_image_path.dart';
+import 'package:medicine_system/constant/app_colors.dart';
+import 'package:medicine_system/constant/app_constant.dart';
+import 'package:medicine_system/utils/app_size.dart';
+import 'package:medicine_system/utils/gap.dart';
+import 'package:medicine_system/widgets/app_image/app_image.dart';
+import 'package:medicine_system/widgets/buttons/app_button.dart';
+import 'package:medicine_system/widgets/inputs/app_input_widget_tow.dart';
+import 'package:medicine_system/widgets/texts/app_text.dart';
+import 'package:medicine_system/screens/auth_screen/forgot_screen/screens/provider/forgot_reset_password_provider.dart';
 
 class ForgotScreenPasswordInputScreen extends ConsumerWidget {
   const ForgotScreenPasswordInputScreen({

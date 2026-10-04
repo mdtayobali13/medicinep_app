@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:flutter_riverpod_template/screens/auth_screen/sign_up_screen/provider/sign_up_provider_state.dart';
-import 'package:flutter_riverpod_template/utils/app_log.dart';
+import 'package:medicine_system/screens/auth_screen/sign_up_screen/provider/sign_up_provider_state.dart';
+import 'package:medicine_system/utils/app_log.dart';
 
 final signUpProvider = StateNotifierProvider<_SignUpProvider, SignUpProviderState>((ref) => _SignUpProvider());
 

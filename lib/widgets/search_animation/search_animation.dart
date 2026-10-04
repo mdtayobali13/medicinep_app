@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod_template/constant/app_asserts_image_path.dart';
-import 'package:flutter_riverpod_template/constant/app_colors.dart';
-import 'package:flutter_riverpod_template/utils/app_size.dart';
-import 'package:flutter_riverpod_template/widgets/app_image/app_image.dart';
+import 'package:medicine_system/constant/app_asserts_image_path.dart';
+import 'package:medicine_system/constant/app_colors.dart';
+import 'package:medicine_system/utils/app_size.dart';
+import 'package:medicine_system/widgets/app_image/app_image.dart';
 
 class SearchAnimation extends StatefulWidget {
   final int waveCount;

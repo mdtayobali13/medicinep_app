@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:flutter_riverpod_template/constant/app_api_url.dart';
-import 'package:flutter_riverpod_template/services/api/api_services.dart';
-import 'package:flutter_riverpod_template/services/api/non_auth_api.dart';
-import 'package:flutter_riverpod_template/services/storage/storage_services.dart';
-import 'package:flutter_riverpod_template/utils/app_log.dart';
+import 'package:medicine_system/constant/app_api_url.dart';
+import 'package:medicine_system/services/api/api_services.dart';
+import 'package:medicine_system/services/api/non_auth_api.dart';
+import 'package:medicine_system/services/storage/storage_services.dart';
+import 'package:medicine_system/utils/app_log.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 

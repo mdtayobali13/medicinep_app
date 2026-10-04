@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod_template/routes/app_routes.dart';
-import 'package:flutter_riverpod_template/utils/app_log.dart';
+import 'package:medicine_system/routes/app_routes.dart';
+import 'package:medicine_system/utils/app_log.dart';
 
 class AppLoader {
   // Singleton pattern

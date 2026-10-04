@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod_template/utils/app_log.dart';
-import 'package:flutter_riverpod_template/widgets/texts/languages/language_provider.dart';
-import 'package:flutter_riverpod_template/widgets/texts/app_text.dart';
+import 'package:medicine_system/utils/app_log.dart';
+import 'package:medicine_system/widgets/texts/languages/language_provider.dart';
+import 'package:medicine_system/widgets/texts/app_text.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:html/parser.dart' as html_parser;

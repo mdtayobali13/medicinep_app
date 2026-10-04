@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod_template/constant/app_colors.dart';
-import 'package:flutter_riverpod_template/utils/app_size.dart';
-import 'package:flutter_riverpod_template/widgets/texts/app_text.dart';
+import 'package:medicine_system/constant/app_colors.dart';
+import 'package:medicine_system/utils/app_size.dart';
+import 'package:medicine_system/widgets/texts/app_text.dart';
 
 AppBar commonAppBar({String? title, Widget? backButton, Widget? titleWidget, List<Widget>? actions}) {
   return AppBar(

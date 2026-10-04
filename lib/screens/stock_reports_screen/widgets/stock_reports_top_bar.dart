@@ -1,0 +1,187 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
+
+class StockReportsTopBar extends StatefulWidget {
+  const StockReportsTopBar({super.key});
+
+  @override
+  State<StockReportsTopBar> createState() => _StockReportsTopBarState();
+}
+
+class _StockReportsTopBarState extends State<StockReportsTopBar> {
+  late final ValueNotifier<String?> _itemsPerPageNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    _itemsPerPageNotifier = ValueNotifier<String?>('10');
+  }
+
+  @override
+  void dispose() {
+    _itemsPerPageNotifier.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardBg = isDark ? const Color(0xFF1E2226) : Colors.white;
+    final borderColor = isDark ? Colors.white12 : Colors.grey.shade300;
+    final textColor = isDark ? Colors.white : Colors.black87;
+
+    return Wrap(
+      alignment: WrapAlignment.spaceBetween,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 16,
+      runSpacing: 16,
+      children: [
+        Wrap(
+          spacing: 16,
+          runSpacing: 16,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            _buildItemsPerPage(isDark, cardBg, borderColor, textColor),
+            _buildIconButton(CupertinoIcons.printer, isDark, cardBg, borderColor, () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Printing stock report...")),
+              );
+            }),
+            _buildExportButton(isDark, cardBg, borderColor, textColor),
+          ],
+        ),
+        _buildSearchBox(isDark, cardBg, borderColor, textColor),
+      ],
+    );
+  }
+
+  Widget _buildItemsPerPage(bool isDark, Color cardBg, Color borderColor, Color textColor) {
+    return Container(
+      height: 38,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        border: Border.all(color: borderColor),
+        borderRadius: BorderRadius.circular(6),
+        color: cardBg,
+      ),
+      child: ValueListenableBuilder<String?>(
+        valueListenable: _itemsPerPageNotifier,
+        builder: (context, currentValue, _) {
+          return DropdownButtonHideUnderline(
+            child: DropdownButton2<String>(
+              isDense: true,
+              value: currentValue,
+              iconStyleData: IconStyleData(
+                icon: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Icon(CupertinoIcons.chevron_down, size: 14, color: isDark ? Colors.white70 : Colors.grey.shade600),
+                ),
+              ),
+              buttonStyleData: const ButtonStyleData(
+                padding: EdgeInsets.zero,
+                height: 38,
+              ),
+              dropdownStyleData: DropdownStyleData(
+                decoration: BoxDecoration(
+                  color: isDark ? const Color(0xFF262B30) : Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                elevation: 4,
+              ),
+              style: TextStyle(color: textColor, fontSize: 14, fontWeight: FontWeight.w500),
+              onChanged: (String? newValue) {
+                if (newValue != null) {
+                  _itemsPerPageNotifier.value = newValue;
+                }
+              },
+              items: <String>['10', '20', '50', '100']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(
+                    value,
+                    style: TextStyle(color: textColor),
+                  ),
+                );
+              }).toList(),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildIconButton(IconData icon, bool isDark, Color cardBg, Color borderColor, VoidCallback onPressed) {
+    return Container(
+      height: 38,
+      width: 38,
+      decoration: BoxDecoration(
+        border: Border.all(color: borderColor),
+        borderRadius: BorderRadius.circular(6),
+        color: cardBg,
+      ),
+      child: IconButton(
+        padding: EdgeInsets.zero,
+        icon: Icon(icon, size: 18, color: isDark ? Colors.white70 : Colors.grey.shade700),
+        onPressed: onPressed,
+      ),
+    );
+  }
+
+  Widget _buildExportButton(bool isDark, Color cardBg, Color borderColor, Color textColor) {
+    return Container(
+      height: 38,
+      decoration: BoxDecoration(
+        border: Border.all(color: borderColor),
+        borderRadius: BorderRadius.circular(6),
+        color: cardBg,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Downloading Excel file...")),
+            );
+          },
+          borderRadius: BorderRadius.circular(6),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Center(
+              child: Text(
+                "Export to Excel",
+                style: TextStyle(color: isDark ? Colors.white70 : Colors.grey.shade700, fontSize: 13, fontWeight: FontWeight.w500),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchBox(bool isDark, Color cardBg, Color borderColor, Color textColor) {
+    return Container(
+      width: 250,
+      height: 38,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        color: cardBg,
+        border: Border.all(color: borderColor),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: TextField(
+        style: TextStyle(color: textColor, fontSize: 14),
+        decoration: InputDecoration(
+          hintText: "Search...",
+          hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.grey.shade400, fontSize: 14),
+          icon: Icon(CupertinoIcons.search, color: isDark ? Colors.white38 : Colors.grey.shade400, size: 18),
+          border: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          contentPadding: const EdgeInsets.only(bottom: 12),
+        ),
+      ),
+    );
+  }
+}

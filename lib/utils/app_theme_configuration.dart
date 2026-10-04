@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod_template/constant/app_colors.dart';
-import 'package:flutter_riverpod_template/constant/app_constant.dart';
+import 'package:medicine_system/constant/app_colors.dart';
+import 'package:medicine_system/constant/app_constant.dart';
 
 class AppThemeConfiguration {
   ////////////// constructor
@@ -59,5 +59,72 @@ class AppThemeConfiguration {
     ),
   );
 
-  ThemeData darkThemeData = ThemeData.dark(useMaterial3: true);
+  ThemeData darkThemeData = ThemeData.dark(useMaterial3: true).copyWith(
+    scaffoldBackgroundColor: const Color(0xFF14171A),
+    cardColor: const Color(0xFF1E2226),
+    canvasColor: const Color(0xFF1E2226),
+    dividerColor: Colors.white12,
+    primaryColor: const Color(0xFF1890FF),
+    splashColor: Colors.transparent,
+    hoverColor: Colors.transparent,
+    appBarTheme: const AppBarTheme(
+      elevation: 0,
+      surfaceTintColor: Color(0xFF1E2226),
+      backgroundColor: Color(0xFF1E2226),
+      iconTheme: IconThemeData(color: Colors.white),
+      titleTextStyle: TextStyle(
+        color: Colors.white,
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    colorScheme: const ColorScheme.dark(
+      primary: Color(0xFF1890FF),
+      surface: Color(0xFF1E2226),
+      onPrimary: Colors.white,
+      onSurface: Colors.white,
+    ),
+    textTheme: TextTheme(
+      bodyLarge: TextStyle(fontFamily: AppConstant.instance.fontFamilyPoppins, color: Colors.white),
+      bodyMedium: TextStyle(fontFamily: AppConstant.instance.fontFamilyPoppins, color: Colors.white),
+      bodySmall: TextStyle(fontFamily: AppConstant.instance.fontFamilyPoppins, color: Colors.white70),
+      displayLarge: TextStyle(fontFamily: AppConstant.instance.fontFamilyPoppins, color: Colors.white),
+      displayMedium: TextStyle(fontFamily: AppConstant.instance.fontFamilyPoppins, color: Colors.white),
+      displaySmall: TextStyle(fontFamily: AppConstant.instance.fontFamilyPoppins, color: Colors.white),
+      headlineLarge: TextStyle(fontFamily: AppConstant.instance.fontFamilyPoppins, color: Colors.white),
+      headlineMedium: TextStyle(fontFamily: AppConstant.instance.fontFamilyPoppins, color: Colors.white),
+      headlineSmall: TextStyle(fontFamily: AppConstant.instance.fontFamilyPoppins, color: Colors.white),
+      labelLarge: TextStyle(fontFamily: AppConstant.instance.fontFamilyPoppins, color: Colors.white),
+      labelMedium: TextStyle(fontFamily: AppConstant.instance.fontFamilyPoppins, color: Colors.white),
+      labelSmall: TextStyle(fontFamily: AppConstant.instance.fontFamilyPoppins, color: Colors.white70),
+      titleLarge: TextStyle(fontFamily: AppConstant.instance.fontFamilyPoppins, color: Colors.white),
+      titleMedium: TextStyle(fontFamily: AppConstant.instance.fontFamilyPoppins, color: Colors.white),
+      titleSmall: TextStyle(fontFamily: AppConstant.instance.fontFamilyPoppins, color: Colors.white),
+    ),
+    iconTheme: const IconThemeData(color: Colors.white),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: const Color(0xFF262B30),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: Color(0xFF383E45)),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: Color(0xFF1890FF)),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: Color(0xFF383E45)),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(color: AppColors.instance.error),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(color: AppColors.instance.error),
+      ),
+    ),
+  );
 }

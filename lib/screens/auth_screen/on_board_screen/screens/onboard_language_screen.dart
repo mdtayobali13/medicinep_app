@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod_template/constant/app_asserts_image_path.dart';
-import 'package:flutter_riverpod_template/constant/app_colors.dart';
-import 'package:flutter_riverpod_template/models/app_language_model.dart';
-import 'package:flutter_riverpod_template/routes/app_routes.dart';
-import 'package:flutter_riverpod_template/routes/app_routes_key.dart';
-import 'package:flutter_riverpod_template/services/storage/storage_services.dart';
-import 'package:flutter_riverpod_template/utils/app_log.dart';
-import 'package:flutter_riverpod_template/utils/app_size.dart';
-import 'package:flutter_riverpod_template/utils/app_snack_bar.dart';
-import 'package:flutter_riverpod_template/utils/gap.dart';
-import 'package:flutter_riverpod_template/widgets/texts/languages/language_provider.dart';
-import 'package:flutter_riverpod_template/widgets/app_image/app_image.dart';
-import 'package:flutter_riverpod_template/widgets/buttons/app_button.dart';
-import 'package:flutter_riverpod_template/widgets/inputs/app_input_widget.dart';
-import 'package:flutter_riverpod_template/widgets/texts/app_text.dart';
+import 'package:medicine_system/constant/app_asserts_image_path.dart';
+import 'package:medicine_system/constant/app_colors.dart';
+import 'package:medicine_system/models/app_language_model.dart';
+import 'package:medicine_system/routes/app_routes.dart';
+import 'package:medicine_system/routes/app_routes_key.dart';
+import 'package:medicine_system/services/storage/storage_services.dart';
+import 'package:medicine_system/utils/app_log.dart';
+import 'package:medicine_system/utils/app_size.dart';
+import 'package:medicine_system/utils/app_snack_bar.dart';
+import 'package:medicine_system/utils/gap.dart';
+import 'package:medicine_system/widgets/texts/languages/language_provider.dart';
+import 'package:medicine_system/widgets/app_image/app_image.dart';
+import 'package:medicine_system/widgets/buttons/app_button.dart';
+import 'package:medicine_system/widgets/inputs/app_input_widget.dart';
+import 'package:medicine_system/widgets/texts/app_text.dart';
 
 class OnboardLanguageScreen extends StatefulWidget {
   const OnboardLanguageScreen({super.key});

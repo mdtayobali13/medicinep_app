@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod_template/constant/app_colors.dart';
-import 'package:flutter_riverpod_template/screens/app_navigation/widgets/nav_bar_item.dart';
+import 'package:medicine_system/constant/app_colors.dart';
+import 'package:medicine_system/screens/app_navigation/widgets/nav_bar_item.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;

@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod_template/constant/app_api_url.dart';
-import 'package:flutter_riverpod_template/routes/app_routes.dart';
-import 'package:flutter_riverpod_template/routes/app_routes_key.dart';
-import 'package:flutter_riverpod_template/services/api/non_auth_api.dart';
-import 'package:flutter_riverpod_template/services/storage/storage_services.dart';
-import 'package:flutter_riverpod_template/utils/app_log.dart';
+import 'package:medicine_system/constant/app_api_url.dart';
+import 'package:medicine_system/routes/app_routes.dart';
+import 'package:medicine_system/routes/app_routes_key.dart';
+import 'package:medicine_system/services/api/non_auth_api.dart';
+import 'package:medicine_system/services/storage/storage_services.dart';
+import 'package:medicine_system/utils/app_log.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class AppApi {

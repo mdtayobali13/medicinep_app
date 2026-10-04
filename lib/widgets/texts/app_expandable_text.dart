@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod_template/constant/app_colors.dart';
-import 'package:flutter_riverpod_template/constant/app_constant.dart';
+import 'package:medicine_system/constant/app_colors.dart';
+import 'package:medicine_system/constant/app_constant.dart';
 import 'package:readmore/readmore.dart';
 
 class AppExpandableText extends StatelessWidget {

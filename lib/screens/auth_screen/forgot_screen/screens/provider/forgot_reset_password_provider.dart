@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:flutter_riverpod_template/routes/app_routes.dart';
-import 'package:flutter_riverpod_template/routes/app_routes_key.dart';
-import 'package:flutter_riverpod_template/services/repository/auth_repository.dart';
-import 'package:flutter_riverpod_template/services/storage/storage_services.dart';
-import 'package:flutter_riverpod_template/utils/app_log.dart';
-import 'package:flutter_riverpod_template/utils/app_snack_bar.dart';
+import 'package:medicine_system/routes/app_routes.dart';
+import 'package:medicine_system/routes/app_routes_key.dart';
+import 'package:medicine_system/services/repository/auth_repository.dart';
+import 'package:medicine_system/services/storage/storage_services.dart';
+import 'package:medicine_system/utils/app_log.dart';
+import 'package:medicine_system/utils/app_snack_bar.dart';
 
 final forgotResetPasswordProvider = StateNotifierProvider<ForgotResetPasswordProvider, bool>((ref) {
   return ForgotResetPasswordProvider();
