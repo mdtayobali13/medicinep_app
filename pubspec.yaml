@@ -14,14 +14,19 @@ dependencies:
 
   # main state management use
   flutter_riverpod: ^3.4.2
+
   # route related
   go_router: ^18.0.0
+
   # payment related
   app_links: ^7.2.1
+
   # storage
   shared_preferences: ^2.5.5
+
   # #1 Secure token storage (Android Keystore / iOS Keychain)
   flutter_secure_storage: ^11.0.0
+
   # environment secure variable
   flutter_dotenv: ^6.0.1
 
@@ -54,17 +59,20 @@ dependencies:
   firebase_messaging: ^16.6.0
   firebase_core: ^4.14.0
   device_info_plus: ^13.2.0
-  vector_math: ^2.4.2
+
+  # Flutter 3.44.0 flutter_test compatibility
+  vector_math: ^2.2.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^6.0.0
-  change_app_package_name:
-    ^1.5.0 # dart run change_app_package_name:main com.new.package.name
-    #  if need only android --android
-    #  if need only iod --ios
+
+  change_app_package_name: ^1.5.0
+  # dart run change_app_package_name:main com.new.package.name
+  # if need only android --android
+  # if need only ios --ios
 
 flutter:
   uses-material-design: true
@@ -74,7 +82,7 @@ flutter:
     - assets/fonts/
     - assets/images/
     - assets/icons/
-    - .env # environment file add asset
+    - .env
 
   # local all font
   fonts:
