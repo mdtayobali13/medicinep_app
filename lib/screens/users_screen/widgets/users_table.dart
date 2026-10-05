@@ -81,11 +81,11 @@ class UsersTable extends StatelessWidget {
     return Column(
       children: users.map((user) {
         return Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(16),
+          margin: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
             color: isDark ? const Color(0xFF1E2226) : Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withAlpha(isDark ? 30 : 5),
@@ -101,17 +101,22 @@ class UsersTable extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "#${user['sl']} ${user['name']}",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: textColor),
+                  Expanded(
+                    child: Text(
+                      "#${user['sl']} ${user['name']}",
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: textColor),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
+                  const SizedBox(width: 8),
                   _buildStatusBadge(user['status']!),
                 ],
               ),
-              const SizedBox(height: 6),
-              Text("Role: ${user['role']}", style: TextStyle(fontSize: 13, color: subTextColor)),
-              Text("Email: ${user['email']}", style: TextStyle(fontSize: 13, color: subTextColor)),
-              const SizedBox(height: 12),
+              const SizedBox(height: 4),
+              Text("Role: ${user['role']}", style: TextStyle(fontSize: 12, color: subTextColor)),
+              Text("Email: ${user['email']}", style: TextStyle(fontSize: 12, color: subTextColor)),
+              const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

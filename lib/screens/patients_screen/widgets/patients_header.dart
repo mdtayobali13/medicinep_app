@@ -8,7 +8,7 @@ class PatientsHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
         color: const Color(0xFF2ECC71),
         borderRadius: BorderRadius.circular(8),
@@ -20,7 +20,7 @@ class PatientsHeader extends StatelessWidget {
             "Patients",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 20,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -31,12 +31,15 @@ class PatientsHeader extends StatelessWidget {
                 builder: (context) => const PatientFormDialog(),
               );
             },
-            icon: const Icon(CupertinoIcons.add_circled, size: 18),
-            label: const Text("Create"),
+            icon: const Icon(CupertinoIcons.add_circled, size: 16),
+            label: const Text("Create", style: TextStyle(fontSize: 13)),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
               foregroundColor: Colors.white,
               elevation: 0,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(6),
               ),

@@ -95,22 +95,23 @@ class _NotificationsTopBarState extends State<NotificationsTopBar> {
     return Container(
       width: 250,
       height: 38,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: Colors.grey.shade300),
         borderRadius: BorderRadius.circular(6),
       ),
       child: TextField(
-        style: const TextStyle(color: Colors.black87, fontSize: 14),
+        style: const TextStyle(color: Colors.black87, fontSize: 13),
         decoration: InputDecoration(
           hintText: "Search...",
-          hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
-          icon: Icon(CupertinoIcons.search, color: Colors.grey.shade400, size: 18),
+          hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
+          icon: Icon(CupertinoIcons.search, color: Colors.grey.shade400, size: 16),
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
-          contentPadding: const EdgeInsets.only(bottom: 12),
+          contentPadding: const EdgeInsets.symmetric(vertical: 8),
+          isDense: true,
         ),
       ),
     );

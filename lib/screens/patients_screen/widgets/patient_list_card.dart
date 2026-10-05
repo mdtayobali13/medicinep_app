@@ -31,16 +31,16 @@ class PatientListCard extends StatelessWidget {
     final textColor = isDark ? Colors.white : Colors.black87;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
         color: cardBg,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
             color: isDark ? Colors.black26 : Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
           ),
         ],
         border: Border.all(color: borderColor),
@@ -49,9 +49,9 @@ class PatientListCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildProfileImage(isDark),
-          const SizedBox(width: 16),
+          const SizedBox(width: 10),
           Expanded(child: _buildDetailsColumn(isDark, textColor)),
-          const SizedBox(width: 16),
+          const SizedBox(width: 6),
           _buildActions(context, isDark, textColor),
         ],
       ),
@@ -60,8 +60,8 @@ class PatientListCard extends StatelessWidget {
 
   Widget _buildProfileImage(bool isDark) {
     return Container(
-      width: 50,
-      height: 50,
+      width: 40,
+      height: 40,
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF262B30) : Colors.blue.shade50,
         shape: BoxShape.circle,
@@ -69,7 +69,7 @@ class PatientListCard extends StatelessWidget {
       child: Icon(
         CupertinoIcons.person_solid,
         color: isDark ? Colors.blue.shade200 : Colors.blue.shade300,
-        size: 28,
+        size: 22,
       ),
     );
   }
@@ -85,7 +85,7 @@ class PatientListCard extends StatelessWidget {
               child: Text(
                 name,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: textColor,
                 ),
@@ -93,23 +93,23 @@ class PatientListCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 6),
             _buildStatusBadge(isDark),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         Wrap(
-          spacing: 16,
-          runSpacing: 6,
+          spacing: 12,
+          runSpacing: 4,
           children: [
             _buildInfoBadge(CupertinoIcons.briefcase, designation, isDark),
             _buildInfoBadge(CupertinoIcons.building_2_fill, policeUnit, isDark),
           ],
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: 4),
         Wrap(
-          spacing: 16,
-          runSpacing: 6,
+          spacing: 12,
+          runSpacing: 4,
           children: [
             _buildInfoBadge(CupertinoIcons.number_square, "BP: $bpNumber", isDark),
             _buildInfoBadge(CupertinoIcons.phone, phone, isDark),

@@ -107,28 +107,35 @@ class _RoleExpandableItemState extends State<RoleExpandableItem> {
             });
           },
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Icon(
-                      _isExpanded ? CupertinoIcons.chevron_down : CupertinoIcons.chevron_right,
-                      size: 14,
-                      color: isDark ? Colors.white70 : Colors.grey.shade700,
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      widget.roleName,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: textColor,
+                Expanded(
+                  child: Row(
+                    children: [
+                      Icon(
+                        _isExpanded ? CupertinoIcons.chevron_down : CupertinoIcons.chevron_right,
+                        size: 14,
+                        color: isDark ? Colors.white70 : Colors.grey.shade700,
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          widget.roleName,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: textColor,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+                const SizedBox(width: 8),
                 if (!_isExpanded) _buildActionButtons(isDark),
               ],
             ),
