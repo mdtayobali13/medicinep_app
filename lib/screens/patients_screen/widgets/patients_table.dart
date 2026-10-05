@@ -36,6 +36,7 @@ class PatientsTable extends ConsumerWidget {
             final item = entry.value;
             return PatientListCard(
               sl: index.toString(),
+              item: item,
               name: item.name,
               designation: item.designation?.name ?? 'N/A',
               bpNumber: item.bpNo ?? 'N/A',

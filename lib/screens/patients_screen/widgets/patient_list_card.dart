@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:medicine_system/models/patient_model.dart';
 import 'package:medicine_system/screens/patients_screen/widgets/patient_view_dialog.dart';
 import 'package:medicine_system/screens/patients_screen/widgets/patient_form_dialog.dart';
 
 class PatientListCard extends StatelessWidget {
   final String sl;
+  final PatientModel? item;
   final String name;
   final String designation;
   final String bpNumber;
@@ -16,6 +17,7 @@ class PatientListCard extends StatelessWidget {
   const PatientListCard({
     super.key,
     required this.sl,
+    this.item,
     required this.name,
     required this.designation,
     required this.bpNumber,
@@ -69,7 +71,7 @@ class PatientListCard extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: Icon(
-        CupertinoIcons.person_solid,
+        Icons.person,
         color: isDark ? Colors.blue.shade200 : Colors.blue.shade300,
         size: 22,
       ),
@@ -104,8 +106,8 @@ class PatientListCard extends StatelessWidget {
           spacing: 12,
           runSpacing: 4,
           children: [
-            _buildInfoBadge(CupertinoIcons.briefcase, designation, isDark),
-            _buildInfoBadge(CupertinoIcons.building_2_fill, policeUnit, isDark),
+            _buildInfoBadge(Icons.work_outline, designation, isDark),
+            _buildInfoBadge(Icons.business, policeUnit, isDark),
           ],
         ),
         const SizedBox(height: 4),
@@ -113,8 +115,8 @@ class PatientListCard extends StatelessWidget {
           spacing: 12,
           runSpacing: 4,
           children: [
-            _buildInfoBadge(CupertinoIcons.number_square, "BP: $bpNumber", isDark),
-            _buildInfoBadge(CupertinoIcons.phone, phone, isDark),
+            _buildInfoBadge(Icons.badge_outlined, "BP: $bpNumber", isDark),
+            _buildInfoBadge(Icons.phone_outlined, phone, isDark),
           ],
         ),
       ],
@@ -132,6 +134,7 @@ class PatientListCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(4),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             width: 6,
@@ -157,6 +160,7 @@ class PatientListCard extends StatelessWidget {
 
   Widget _buildInfoBadge(IconData icon, String text, bool isDark) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, size: 14, color: isDark ? Colors.white54 : Colors.grey.shade500),
         const SizedBox(width: 4),
@@ -167,7 +171,7 @@ class PatientListCard extends StatelessWidget {
 
   Widget _buildActions(BuildContext context, bool isDark, Color textColor) {
     return PopupMenuButton<String>(
-      icon: Icon(CupertinoIcons.ellipsis_vertical, color: isDark ? Colors.white70 : Colors.grey.shade600, size: 20),
+      icon: Icon(Icons.more_vert, color: isDark ? Colors.white70 : Colors.grey.shade600, size: 20),
       color: isDark ? const Color(0xFF262B30) : Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       elevation: 4,
@@ -183,6 +187,7 @@ class PatientListCard extends StatelessWidget {
             context: context,
             builder: (context) => PatientFormDialog(
               isEdit: true,
+              item: item,
               initialData: {
                 'name': name,
                 'designation': designation,
@@ -202,7 +207,7 @@ class PatientListCard extends StatelessWidget {
           value: 'view',
           child: Row(
             children: [
-              Icon(CupertinoIcons.eye, size: 18, color: Colors.green.shade600),
+              Icon(Icons.visibility_outlined, size: 18, color: Colors.green.shade600),
               const SizedBox(width: 12),
               Text('View', style: TextStyle(fontSize: 14, color: textColor, fontWeight: FontWeight.w500)),
             ],
@@ -212,7 +217,7 @@ class PatientListCard extends StatelessWidget {
           value: 'edit',
           child: Row(
             children: [
-              Icon(CupertinoIcons.pencil, size: 18, color: Colors.blue.shade600),
+              Icon(Icons.edit_outlined, size: 18, color: Colors.blue.shade600),
               const SizedBox(width: 12),
               Text('Edit', style: TextStyle(fontSize: 14, color: textColor, fontWeight: FontWeight.w500)),
             ],
@@ -222,7 +227,7 @@ class PatientListCard extends StatelessWidget {
           value: 'delete',
           child: Row(
             children: [
-              Icon(CupertinoIcons.trash, size: 18, color: Colors.red.shade600),
+              Icon(Icons.delete_outline, size: 18, color: Colors.red.shade600),
               const SizedBox(width: 12),
               Text('Delete', style: TextStyle(fontSize: 14, color: textColor, fontWeight: FontWeight.w500)),
             ],

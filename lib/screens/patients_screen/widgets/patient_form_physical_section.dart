@@ -5,9 +5,21 @@ import 'package:medicine_system/screens/patients_screen/widgets/section_containe
 
 class PatientFormPhysicalSection extends StatelessWidget {
   final bool isDesktop;
-  final Map<String, String>? initialData;
+  final String? selectedBloodGroup;
+  final ValueChanged<String?> onBloodGroupChanged;
+  final TextEditingController heightController;
+  final TextEditingController weightController;
+  final TextEditingController eyesightController;
 
-  const PatientFormPhysicalSection({super.key, required this.isDesktop, this.initialData});
+  const PatientFormPhysicalSection({
+    super.key,
+    required this.isDesktop,
+    required this.selectedBloodGroup,
+    required this.onBloodGroupChanged,
+    required this.heightController,
+    required this.weightController,
+    required this.eyesightController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,18 +37,19 @@ class PatientFormPhysicalSection extends StatelessWidget {
           child: MedicineDropdownField<String>(
             label: "Blood group",
             hint: "Select blood group",
-            value: initialData?['blood_group'],
+            value: selectedBloodGroup,
             items: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
                 .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                 .toList(),
+            onChanged: onBloodGroupChanged,
           ),
         ),
         const SizedBox(width: 16),
-        Expanded(child: MedicineTextField(label: "Height (ft)", hint: "", initialValue: initialData?['height'])),
+        Expanded(child: MedicineTextField(label: "Height (ft)", hint: "Enter height", controller: heightController)),
         const SizedBox(width: 16),
-        Expanded(child: MedicineTextField(label: "Weight (kg)", hint: "", initialValue: initialData?['weight'])),
+        Expanded(child: MedicineTextField(label: "Weight (kg)", hint: "Enter weight", controller: weightController)),
         const SizedBox(width: 16),
-        Expanded(child: MedicineTextField(label: "Eyesight", hint: "", initialValue: initialData?['eyesight'])),
+        Expanded(child: MedicineTextField(label: "Eyesight", hint: "Enter eyesight", controller: eyesightController)),
       ],
     );
   }
@@ -47,17 +60,18 @@ class PatientFormPhysicalSection extends StatelessWidget {
         MedicineDropdownField<String>(
           label: "Blood group",
           hint: "Select blood group",
-          value: initialData?['blood_group'],
+          value: selectedBloodGroup,
           items: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
               .map((e) => DropdownMenuItem(value: e, child: Text(e)))
               .toList(),
+          onChanged: onBloodGroupChanged,
         ),
         const SizedBox(height: 16),
-        MedicineTextField(label: "Height (ft)", hint: "", initialValue: initialData?['height']),
+        MedicineTextField(label: "Height (ft)", hint: "Enter height", controller: heightController),
         const SizedBox(height: 16),
-        MedicineTextField(label: "Weight (kg)", hint: "", initialValue: initialData?['weight']),
+        MedicineTextField(label: "Weight (kg)", hint: "Enter weight", controller: weightController),
         const SizedBox(height: 16),
-        MedicineTextField(label: "Eyesight", hint: "", initialValue: initialData?['eyesight']),
+        MedicineTextField(label: "Eyesight", hint: "Enter eyesight", controller: eyesightController),
       ],
     );
   }

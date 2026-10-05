@@ -8,8 +8,15 @@ class PatientFormAddressSection extends StatelessWidget {
   final String title;
   final String villageLabel;
   final Color backgroundColor;
-  final Map<String, String>? initialData;
-  final String prefix; // 'present_' or 'permanent_'
+  final TextEditingController villageController;
+  final String? selectedDivision;
+  final ValueChanged<String?>? onDivisionChanged;
+  final String? selectedDistrict;
+  final ValueChanged<String?>? onDistrictChanged;
+  final String? selectedUpazila;
+  final ValueChanged<String?>? onUpazilaChanged;
+  final String? selectedUnion;
+  final ValueChanged<String?>? onUnionChanged;
 
   const PatientFormAddressSection({
     super.key,
@@ -17,8 +24,15 @@ class PatientFormAddressSection extends StatelessWidget {
     required this.title,
     required this.villageLabel,
     required this.backgroundColor,
-    this.initialData,
-    this.prefix = '',
+    required this.villageController,
+    this.selectedDivision,
+    this.onDivisionChanged,
+    this.selectedDistrict,
+    this.onDistrictChanged,
+    this.selectedUpazila,
+    this.onUpazilaChanged,
+    this.selectedUnion,
+    this.onUnionChanged,
   });
 
   @override
@@ -26,11 +40,14 @@ class PatientFormAddressSection extends StatelessWidget {
     return SectionContainer(
       title: title,
       backgroundColor: backgroundColor,
-      child: isDesktop ? _buildDesktop() : _buildMobile(),
+      child: isDesktop ? _buildDesktop(context) : _buildMobile(context),
     );
   }
 
-  Widget _buildDesktop() {
+  Widget _buildDesktop(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final labelColor = isDark ? Colors.white70 : Colors.grey.shade800;
+
     return Column(
       children: [
         Row(
@@ -39,8 +56,11 @@ class PatientFormAddressSection extends StatelessWidget {
               child: MedicineDropdownField<String>(
                 label: "Division",
                 hint: "Select division",
-                value: initialData?['${prefix}division'],
-                items: ['Dhaka', 'Chittagong', 'Rajshahi'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                value: selectedDivision,
+                items: ['Dhaka', 'Chittagong', 'Rajshahi', 'Khulna', 'Barisal', 'Sylhet', 'Rangpur', 'Mymensingh']
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .toList(),
+                onChanged: onDivisionChanged,
               ),
             ),
             const SizedBox(width: 16),
@@ -48,8 +68,11 @@ class PatientFormAddressSection extends StatelessWidget {
               child: MedicineDropdownField<String>(
                 label: "District",
                 hint: "Select district",
-                value: initialData?['${prefix}district'],
-                items: ['District 1', 'District 2'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                value: selectedDistrict,
+                items: ['Dhaka', 'Gazipur', 'Narayanganj', 'Chittagong', 'Comilla']
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .toList(),
+                onChanged: onDistrictChanged,
               ),
             ),
             const SizedBox(width: 16),
@@ -57,8 +80,11 @@ class PatientFormAddressSection extends StatelessWidget {
               child: MedicineDropdownField<String>(
                 label: "Upazila",
                 hint: "Select upazila",
-                value: initialData?['${prefix}upazila'],
-                items: ['Upazila 1', 'Upazila 2'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                value: selectedUpazila,
+                items: ['Mirpur', 'Dhanmondi', 'Gulshan', 'Uttara', 'Savar']
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .toList(),
+                onChanged: onUpazilaChanged,
               ),
             ),
             const SizedBox(width: 16),
@@ -66,8 +92,11 @@ class PatientFormAddressSection extends StatelessWidget {
               child: MedicineDropdownField<String>(
                 label: "Union",
                 hint: "Select union",
-                value: initialData?['${prefix}union'],
-                items: ['Union 1', 'Union 2'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                value: selectedUnion,
+                items: ['Union 1', 'Union 2', 'Union 3']
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .toList(),
+                onChanged: onUnionChanged,
               ),
             ),
           ],
@@ -76,48 +105,60 @@ class PatientFormAddressSection extends StatelessWidget {
         Row(
           children: [
             SizedBox(
-              width: 140, // Label on the left
-              child: Text(villageLabel, style: TextStyle(color: Colors.grey.shade800, fontSize: 13)),
+              width: 140,
+              child: Text(villageLabel, style: TextStyle(color: labelColor, fontSize: 13)),
             ),
-            Expanded(child: MedicineTextField(label: "", hint: "", initialValue: initialData?['${prefix}village'])),
+            Expanded(child: MedicineTextField(label: "", hint: "Enter village / house details", controller: villageController)),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildMobile() {
+  Widget _buildMobile(BuildContext context) {
     return Column(
       children: [
         MedicineDropdownField<String>(
           label: "Division",
           hint: "Select division",
-          value: initialData?['${prefix}division'],
-          items: ['Dhaka', 'Chittagong', 'Rajshahi'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+          value: selectedDivision,
+          items: ['Dhaka', 'Chittagong', 'Rajshahi', 'Khulna', 'Barisal', 'Sylhet', 'Rangpur', 'Mymensingh']
+              .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+              .toList(),
+          onChanged: onDivisionChanged,
         ),
         const SizedBox(height: 16),
         MedicineDropdownField<String>(
           label: "District",
           hint: "Select district",
-          value: initialData?['${prefix}district'],
-          items: ['District 1', 'District 2'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+          value: selectedDistrict,
+          items: ['Dhaka', 'Gazipur', 'Narayanganj', 'Chittagong', 'Comilla']
+              .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+              .toList(),
+          onChanged: onDistrictChanged,
         ),
         const SizedBox(height: 16),
         MedicineDropdownField<String>(
           label: "Upazila",
           hint: "Select upazila",
-          value: initialData?['${prefix}upazila'],
-          items: ['Upazila 1', 'Upazila 2'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+          value: selectedUpazila,
+          items: ['Mirpur', 'Dhanmondi', 'Gulshan', 'Uttara', 'Savar']
+              .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+              .toList(),
+          onChanged: onUpazilaChanged,
         ),
         const SizedBox(height: 16),
         MedicineDropdownField<String>(
           label: "Union",
           hint: "Select union",
-          value: initialData?['${prefix}union'],
-          items: ['Union 1', 'Union 2'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+          value: selectedUnion,
+          items: ['Union 1', 'Union 2', 'Union 3']
+              .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+              .toList(),
+          onChanged: onUnionChanged,
         ),
         const SizedBox(height: 16),
-        MedicineTextField(label: villageLabel, hint: "", initialValue: initialData?['${prefix}village']),
+        MedicineTextField(label: villageLabel, hint: "Enter village / house details", controller: villageController),
       ],
     );
   }

@@ -41,13 +41,20 @@ class _MedicineFormDialogState extends ConsumerState<MedicineFormDialog> {
     super.initState();
     _nameController = TextEditingController(text: widget.item?.brandName ?? '');
     _genericNameController = TextEditingController(text: widget.item?.genericName ?? '');
-    _alertQtyController = TextEditingController(text: widget.item?.alertQuantity?.toString() ?? '');
-    _expirationDaysController = TextEditingController(text: '');
-    _originController = TextEditingController(text: '');
+    _alertQtyController = TextEditingController(text: widget.item?.alertQuantity?.toString() ?? '10');
+    _expirationDaysController = TextEditingController(text: '30');
+    _originController = TextEditingController(text: 'Local');
 
     _selectedCategoryId = widget.item?.categoryId ?? widget.item?.category?.id;
     _selectedUnitId = widget.item?.unitId ?? widget.item?.unit?.id;
-    _selectedStatus = widget.item?.status?.toString() ?? 'Active';
+    final rawStatus = widget.item?.status?.toString();
+    if (rawStatus != null && (rawStatus == '1' || rawStatus == 'active' || rawStatus == 'Active')) {
+      _selectedStatus = 'Active';
+    } else if (rawStatus != null) {
+      _selectedStatus = 'Inactive';
+    } else {
+      _selectedStatus = 'Active';
+    }
   }
 
   @override
@@ -69,17 +76,30 @@ class _MedicineFormDialogState extends ConsumerState<MedicineFormDialog> {
       return;
     }
 
+    final categoriesList = ref.read(medicineCategoriesProvider).list;
+    final unitsList = ref.read(medicineUnitsProvider).list;
+
+    final catId = _selectedCategoryId ?? (categoriesList.isNotEmpty ? categoriesList.first.id : 1);
+    final unitId = _selectedUnitId ?? (unitsList.isNotEmpty ? unitsList.first.id : 1);
+
+    final expDays = int.tryParse(_expirationDaysController.text.trim()) ?? 30;
+
     setState(() => _isSaving = true);
 
     final Map<String, dynamic> data = {
+      'name': name,
       'brand_name': name,
-      'generic_name': _genericNameController.text.trim(),
-      if (_selectedCategoryId != null) 'category_id': _selectedCategoryId,
-      if (_selectedUnitId != null) 'unit_id': _selectedUnitId,
-      if (_alertQtyController.text.trim().isNotEmpty)
-        'alert_quantity': int.tryParse(_alertQtyController.text.trim()) ?? 0,
-      'origin': _originController.text.trim(),
-      'status': _selectedStatus == 'Active' ? 1 : 0,
+      if (_genericNameController.text.trim().isNotEmpty)
+        'generic_name': _genericNameController.text.trim(),
+      'category_id': catId,
+      'medicine_category_id': catId,
+      'unit_id': unitId,
+      'medicine_unit_id': unitId,
+      'alert_quantity': int.tryParse(_alertQtyController.text.trim()) ?? 10,
+      'expiration_reminder_day': expDays,
+      'expiration_reminder_days': expDays,
+      'origin': _originController.text.trim().isNotEmpty ? _originController.text.trim() : 'Local',
+      'status': _selectedStatus.toLowerCase(),
     };
 
     bool success = false;
@@ -95,7 +115,7 @@ class _MedicineFormDialogState extends ConsumerState<MedicineFormDialog> {
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to save medicine. Please try again.')),
+          const SnackBar(content: Text('Failed to save medicine. Please check error message above.')),
         );
       }
     }
