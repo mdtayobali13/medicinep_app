@@ -164,22 +164,23 @@ class _DistributionsTopBarState extends State<DistributionsTopBar> {
     return Container(
       width: 250,
       height: 38,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: cardBg,
         border: Border.all(color: borderColor),
         borderRadius: BorderRadius.circular(6),
       ),
       child: TextField(
-        style: TextStyle(color: textColor, fontSize: 14),
+        style: TextStyle(color: textColor, fontSize: 13),
         decoration: InputDecoration(
           hintText: "Search...",
-          hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.grey.shade400, fontSize: 14),
-          icon: Icon(CupertinoIcons.search, color: isDark ? Colors.white38 : Colors.grey.shade400, size: 18),
+          hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.grey.shade400, fontSize: 13),
+          icon: Icon(CupertinoIcons.search, color: isDark ? Colors.white38 : Colors.grey.shade400, size: 16),
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
-          contentPadding: const EdgeInsets.only(bottom: 12),
+          contentPadding: const EdgeInsets.symmetric(vertical: 8),
+          isDense: true,
         ),
       ),
     );

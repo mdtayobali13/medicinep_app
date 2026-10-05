@@ -204,7 +204,7 @@ class _AppInputWidgetTwoState extends State<AppInputWidgetTwo> {
 
                 hoverColor: AppColors.instance.transparent,
                 filled: true,
-                contentPadding: widget.contentPadding ?? EdgeInsets.all(AppSize.width(value: 15.0)),
+                contentPadding: widget.contentPadding ?? EdgeInsets.symmetric(horizontal: AppSize.width(value: 12.0), vertical: AppSize.width(value: 10.0)),
                 fillColor: widget.fillColor ?? AppColors.instance.primary,
                 prefixIcon: widget.prefix,
                 suffixIcon: widget.isPassWord

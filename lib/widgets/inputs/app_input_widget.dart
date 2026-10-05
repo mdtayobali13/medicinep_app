@@ -187,7 +187,7 @@ class _AppInputWidgetState extends State<AppInputWidget> {
           fontFamily: AppConstant.instance.fontFamilyPoppins,
           fontSize: 12,
         ),
-        contentPadding: widget.contentPadding ?? EdgeInsets.all(AppSize.width(value: 10.0)),
+        contentPadding: widget.contentPadding ?? EdgeInsets.symmetric(horizontal: AppSize.width(value: 12.0), vertical: AppSize.width(value: 8.0)),
         filled: widget.filled,
         fillColor: widget.fillColor ?? AppColors.instance.white50,
         prefixIcon: widget.prefix,
