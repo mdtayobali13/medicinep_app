@@ -34,16 +34,16 @@ class DesignationsTable extends StatelessWidget {
     final borderColor = isDark ? Colors.white12 : Colors.grey.shade100;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
         color: cardBg,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
             color: isDark ? Colors.black26 : Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
           ),
         ],
         border: Border.all(color: borderColor),
@@ -52,8 +52,8 @@ class DesignationsTable extends StatelessWidget {
         children: [
           // SL Circle
           Container(
-            width: 44,
-            height: 44,
+            width: 36,
+            height: 36,
             decoration: BoxDecoration(
               color: circleBg,
               shape: BoxShape.circle,
@@ -63,13 +63,13 @@ class DesignationsTable extends StatelessWidget {
                 sl,
                 style: const TextStyle(
                   color: Color(0xFF2ECC71),
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 10),
           
           // Main Content
           Expanded(
@@ -79,32 +79,47 @@ class DesignationsTable extends StatelessWidget {
                 Text(
                   name,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: textColor,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 6),
-                Row(
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 4,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    Icon(CupertinoIcons.tag, size: 14, color: iconColor),
-                    const SizedBox(width: 4),
-                    Text(
-                      "Index: $index",
-                      style: TextStyle(fontSize: 13, color: subTextColor),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(CupertinoIcons.tag, size: 12, color: iconColor),
+                        const SizedBox(width: 3),
+                        Text(
+                          "Index: $index",
+                          style: TextStyle(fontSize: 11.5, color: subTextColor),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 12),
-                    Icon(CupertinoIcons.calendar, size: 14, color: iconColor),
-                    const SizedBox(width: 4),
-                    Text(
-                      createdAt,
-                      style: TextStyle(fontSize: 13, color: subTextColor),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(CupertinoIcons.calendar, size: 12, color: iconColor),
+                        const SizedBox(width: 3),
+                        Text(
+                          createdAt,
+                          style: TextStyle(fontSize: 11.5, color: subTextColor),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ],
             ),
           ),
+          const SizedBox(width: 8),
           
           // Actions
           Row(
@@ -125,7 +140,7 @@ class DesignationsTable extends StatelessWidget {
                   );
                 }
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
               _buildActionButton(
                 CupertinoIcons.trash, 
                 Colors.red.shade700, 
@@ -153,14 +168,14 @@ class DesignationsTable extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(6),
         child: Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
             color: bgColor,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(6),
           ),
-          child: Icon(icon, size: 18, color: iconColor),
+          child: Icon(icon, size: 15, color: iconColor),
         ),
       ),
     );

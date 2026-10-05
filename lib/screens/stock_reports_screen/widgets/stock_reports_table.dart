@@ -86,11 +86,11 @@ class StockReportsTable extends StatelessWidget {
     return Column(
       children: data.map((item) {
         return Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(16),
+          margin: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
             color: cardBg,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
                 color: isDark ? Colors.black26 : Colors.black.withAlpha(5),
@@ -106,19 +106,24 @@ class StockReportsTable extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "#${item['sl']} ${item['medicine']}",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: textColor),
+                  Expanded(
+                    child: Text(
+                      "#${item['sl']} ${item['medicine']}",
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: textColor),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
+                  const SizedBox(width: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
                       color: isDark ? Colors.blue.withValues(alpha: 0.2) : Colors.blue.shade50,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
                       "Remaining: ${item['remaining']}",
-                      style: TextStyle(color: isDark ? Colors.lightBlueAccent : Colors.blue.shade700, fontWeight: FontWeight.bold, fontSize: 12),
+                      style: TextStyle(color: isDark ? Colors.lightBlueAccent : Colors.blue.shade700, fontWeight: FontWeight.bold, fontSize: 11),
                     ),
                   ),
                 ],
