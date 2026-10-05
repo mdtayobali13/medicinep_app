@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:medicine_system/routes/app_routes.dart';
 import 'package:medicine_system/routes/app_routes_key.dart';
+import 'package:medicine_system/services/storage/storage_services.dart';
+import 'package:medicine_system/utils/app_log.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,9 +15,23 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
+    _checkAuthAndNavigate();
+  }
+
+  Future<void> _checkAuthAndNavigate() async {
+    await Future.delayed(const Duration(seconds: 2));
+    try {
+      final token = await StorageServices.instance.getToken();
+      appLog("SplashScreen token check: '${token.isNotEmpty ? 'Token Found' : 'No Token'}'");
+      if (token.isNotEmpty) {
+        AppRoutes.instance.go(AppRoutesKey.instance.homeScreen);
+      } else {
+        AppRoutes.instance.go(AppRoutesKey.instance.signInScreen);
+      }
+    } catch (e) {
+      errorLog("_checkAuthAndNavigate", e);
       AppRoutes.instance.go(AppRoutesKey.instance.signInScreen);
-    });
+    }
   }
 
   @override

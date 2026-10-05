@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:medicine_system/providers/designations_provider.dart';
 import 'package:medicine_system/screens/designations_screen/widgets/designation_form_dialog.dart';
 
-class DesignationsHeader extends StatelessWidget {
+class DesignationsHeader extends ConsumerWidget {
   const DesignationsHeader({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
@@ -28,7 +30,11 @@ class DesignationsHeader extends StatelessWidget {
             onPressed: () {
               showDialog(
                 context: context,
-                builder: (context) => const DesignationFormDialog(),
+                builder: (dialogCtx) => DesignationFormDialog(
+                  onSave: (name, index) {
+                    ref.read(designationsProvider.notifier).createDesignation(name, index: index);
+                  },
+                ),
               );
             },
             icon: const Icon(CupertinoIcons.add_circled, size: 16),

@@ -34,11 +34,32 @@ class PatientFormJobSection extends StatelessWidget {
         const SizedBox(height: 16),
         Row(
           children: [
-            Expanded(child: MedicineDropdownField(label: "Police unit", hint: "", initialValue: initialData?['police_unit'])),
+            Expanded(
+              child: MedicineDropdownField<String>(
+                label: "Police unit",
+                hint: "Select unit",
+                value: initialData?['police_unit'],
+                items: ['Unit 1', 'Unit 2'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+              ),
+            ),
             const SizedBox(width: 16),
-            Expanded(child: MedicineDropdownField(label: "Designation", hint: "", initialValue: initialData?['designation'])),
+            Expanded(
+              child: MedicineDropdownField<String>(
+                label: "Designation",
+                hint: "Select designation",
+                value: initialData?['designation'],
+                items: ['Officer', 'Inspector', 'Constable'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+              ),
+            ),
             const SizedBox(width: 16),
-            Expanded(child: MedicineDropdownField(label: "Employee status", hint: "", initialValue: initialData?['status'])),
+            Expanded(
+              child: MedicineDropdownField<String>(
+                label: "Employee status",
+                hint: "Select status",
+                value: initialData?['status'],
+                items: ['Active', 'Retired', 'Resigned'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+              ),
+            ),
             const SizedBox(width: 16),
             Expanded(child: MedicineDateField(label: "Joining date", hint: "Select date", initialValue: initialData?['joining_date'])),
           ],
@@ -56,11 +77,26 @@ class PatientFormJobSection extends StatelessWidget {
         const SizedBox(height: 16),
         MedicineTextField(label: "Phone number", hint: "", initialValue: initialData?['phone']),
         const SizedBox(height: 16),
-        MedicineDropdownField(label: "Police unit", hint: "", initialValue: initialData?['police_unit']),
+        MedicineDropdownField<String>(
+          label: "Police unit",
+          hint: "Select unit",
+          value: initialData?['police_unit'],
+          items: ['Unit 1', 'Unit 2'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+        ),
         const SizedBox(height: 16),
-        MedicineDropdownField(label: "Designation", hint: "", initialValue: initialData?['designation']),
+        MedicineDropdownField<String>(
+          label: "Designation",
+          hint: "Select designation",
+          value: initialData?['designation'],
+          items: ['Officer', 'Inspector', 'Constable'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+        ),
         const SizedBox(height: 16),
-        MedicineDropdownField(label: "Employee status", hint: "", initialValue: initialData?['status']),
+        MedicineDropdownField<String>(
+          label: "Employee status",
+          hint: "Select status",
+          value: initialData?['status'],
+          items: ['Active', 'Retired', 'Resigned'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+        ),
         const SizedBox(height: 16),
         MedicineDateField(label: "Joining date", hint: "Select date", initialValue: initialData?['joining_date']),
       ],

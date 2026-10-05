@@ -1,30 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:medicine_system/models/medicine_category_model.dart';
+import 'package:medicine_system/providers/medicine_categories_provider.dart';
 import 'package:medicine_system/screens/medicine_categories_screen/widgets/medicine_category_form_dialog.dart';
 import 'package:medicine_system/screens/medicine_categories_screen/widgets/delete_confirmation_dialog.dart';
 
-class MedicineCategoriesTable extends StatelessWidget {
+class MedicineCategoriesTable extends ConsumerWidget {
   const MedicineCategoriesTable({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(medicineCategoriesProvider);
+
+    if (state.isLoading && state.list.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 32),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (state.list.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 32),
+        child: Center(
+          child: Text(
+            state.error ?? "No categories found",
+            style: TextStyle(color: Colors.grey.shade500, fontSize: 13),
+          ),
+        ),
+      );
+    }
+
     return Column(
       children: [
-        _buildListCard(context, "1", "Naek", "16", "11-04-2025"),
-        _buildListCard(context, "2", "Constable", "17", "11-04-2025"),
-        _buildListCard(context, "3", "ASI(AB)", "18", "30-05-2025"),
-        _buildListCard(context, "4", "ASI(UB)", "19", "30-05-2025"),
-        _buildListCard(context, "5", "SI", "20", "30-05-2025"),
-        _buildListCard(context, "6", "Inspector", "21", "30-05-2025"),
-        _buildListCard(context, "7", "Inspector(AB)", "22", "30-05-2025"),
-        _buildListCard(context, "8", "Inspector(UB)", "23", "30-05-2025"),
-        _buildListCard(context, "9", "ASP", "24", "30-05-2025"),
-        _buildListCard(context, "10", "SASP", "25", "30-05-2025"),
+        ...state.list.asMap().entries.map((entry) {
+          final index = entry.key + 1;
+          final item = entry.value;
+          return _buildListCard(context, ref, index.toString(), item);
+        }),
+        if (state.isLoadingMore)
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Center(
+              child: SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(strokeWidth: 2.5),
+              ),
+            ),
+          ),
       ],
     );
   }
 
-  Widget _buildListCard(BuildContext context, String sl, String name, String index, String createdAt) {
+  Widget _buildListCard(BuildContext context, WidgetRef ref, String sl, MedicineCategoryModel item) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark ? const Color(0xFF1E2226) : Colors.white;
     final textColor = isDark ? Colors.white : Colors.black87;
@@ -32,6 +62,7 @@ class MedicineCategoriesTable extends StatelessWidget {
     final iconColor = isDark ? Colors.white54 : Colors.grey.shade500;
     final circleBg = isDark ? const Color(0xFF262B30) : const Color(0xFFF0FDF4);
     final borderColor = isDark ? Colors.white12 : Colors.grey.shade100;
+    final createdAtStr = item.createdAt != null ? item.createdAt!.split('T').first : '';
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -70,14 +101,14 @@ class MedicineCategoriesTable extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          
+
           // Main Content
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  name,
+                  item.name,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -92,69 +123,75 @@ class MedicineCategoriesTable extends StatelessWidget {
                   runSpacing: 4,
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(CupertinoIcons.tag, size: 12, color: iconColor),
-                        const SizedBox(width: 3),
-                        Text(
-                          "Index: $index",
-                          style: TextStyle(fontSize: 11.5, color: subTextColor),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(CupertinoIcons.calendar, size: 12, color: iconColor),
-                        const SizedBox(width: 3),
-                        Text(
-                          createdAt,
-                          style: TextStyle(fontSize: 11.5, color: subTextColor),
-                        ),
-                      ],
-                    ),
+                    if (item.description != null && item.description!.isNotEmpty)
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(CupertinoIcons.text_alignleft, size: 12, color: iconColor),
+                          const SizedBox(width: 3),
+                          Text(
+                            item.description!,
+                            style: TextStyle(fontSize: 11.5, color: subTextColor),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    if (createdAtStr.isNotEmpty)
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(CupertinoIcons.calendar, size: 12, color: iconColor),
+                          const SizedBox(width: 3),
+                          Text(
+                            createdAtStr,
+                            style: TextStyle(fontSize: 11.5, color: subTextColor),
+                          ),
+                        ],
+                      ),
                   ],
                 ),
               ],
             ),
           ),
           const SizedBox(width: 8),
-          
+
           // Actions
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildActionButton(
-                CupertinoIcons.pencil, 
-                Colors.blue.shade700, 
-                isDark ? Colors.blue.withValues(alpha: 0.2) : Colors.blue.shade50, 
+                CupertinoIcons.pencil,
+                Colors.blue.shade700,
+                isDark ? Colors.blue.withValues(alpha: 0.2) : Colors.blue.shade50,
                 () {
                   showDialog(
                     context: context,
-                    builder: (context) => MedicineCategoryFormDialog(
+                    builder: (dialogCtx) => MedicineCategoryFormDialog(
                       isEdit: true,
-                      initialName: name,
-                      initialIndex: index,
-                    ),
-                  );
-                }
-              ),
-              const SizedBox(width: 6),
-              _buildActionButton(
-                CupertinoIcons.trash, 
-                Colors.red.shade700, 
-                isDark ? Colors.red.withValues(alpha: 0.2) : Colors.red.shade50, 
-                () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => DeleteConfirmationDialog(
-                      onConfirm: () {
-                        // Delete logic here
+                      initialName: item.name,
+                      onSave: (newName) {
+                        ref.read(medicineCategoriesProvider.notifier).updateCategory(item.id, newName);
                       },
                     ),
                   );
-                }
+                },
+              ),
+              const SizedBox(width: 6),
+              _buildActionButton(
+                CupertinoIcons.trash,
+                Colors.red.shade700,
+                isDark ? Colors.red.withValues(alpha: 0.2) : Colors.red.shade50,
+                () {
+                  showDialog(
+                    context: context,
+                    builder: (dialogCtx) => DeleteConfirmationDialog(
+                      onConfirm: () {
+                        ref.read(medicineCategoriesProvider.notifier).deleteCategory(item.id);
+                      },
+                    ),
+                  );
+                },
               ),
             ],
           ),

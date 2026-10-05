@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:medicine_system/providers/medicine_categories_provider.dart';
 import 'package:medicine_system/screens/medicine_categories_screen/widgets/medicine_category_form_dialog.dart';
 
-class MedicineCategoriesHeader extends StatelessWidget {
+class MedicineCategoriesHeader extends ConsumerWidget {
   const MedicineCategoriesHeader({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
@@ -28,7 +30,11 @@ class MedicineCategoriesHeader extends StatelessWidget {
             onPressed: () {
               showDialog(
                 context: context,
-                builder: (context) => const MedicineCategoryFormDialog(),
+                builder: (dialogCtx) => MedicineCategoryFormDialog(
+                  onSave: (name) {
+                    ref.read(medicineCategoriesProvider.notifier).createCategory(name);
+                  },
+                ),
               );
             },
             icon: const Icon(CupertinoIcons.add_circled, size: 16),

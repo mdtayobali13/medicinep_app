@@ -36,7 +36,7 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 16),
             const DashboardStatsGrid(),
             const DashboardChartPlaceholder(title: "Medicine Overview (Line Chart)"),
-            const DashboardChartPlaceholder(title: "Medicine Overview (Pie Chart)"),
+            const DashboardChartPlaceholder(title: "Medicine Overview (Pie Chart)", isPieChart: true),
             const SizedBox(height: 16),
           ],
         ),

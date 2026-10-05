@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:medicine_system/providers/police_units_provider.dart';
 
-class PoliceUnitsTopBar extends StatelessWidget {
+class PoliceUnitsTopBar extends ConsumerWidget {
   const PoliceUnitsTopBar({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark ? const Color(0xFF1E2226) : Colors.white;
     final borderColor = isDark ? Colors.white12 : Colors.grey.shade300;
     final textColor = isDark ? Colors.white : Colors.black;
+
+    final state = ref.watch(policeUnitsProvider);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -24,6 +28,7 @@ class PoliceUnitsTopBar extends StatelessWidget {
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton2<int>(
+              value: state.perPage,
               hint: Text("10", style: TextStyle(color: textColor)),
               items: [10, 20, 50, 100].map((int value) {
                 return DropdownMenuItem<int>(
@@ -34,7 +39,11 @@ class PoliceUnitsTopBar extends StatelessWidget {
                   ),
                 );
               }).toList(),
-              onChanged: (_) {},
+              onChanged: (val) {
+                if (val != null) {
+                  ref.read(policeUnitsProvider.notifier).fetchPoliceUnits(page: 1, perPage: val);
+                }
+              },
               iconStyleData: IconStyleData(
                 icon: Icon(CupertinoIcons.chevron_down, size: 16, color: isDark ? Colors.white70 : Colors.grey.shade600),
               ),
@@ -62,6 +71,9 @@ class PoliceUnitsTopBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(6),
             ),
             child: TextField(
+              onChanged: (val) {
+                ref.read(policeUnitsProvider.notifier).fetchPoliceUnits(search: val);
+              },
               style: TextStyle(color: isDark ? Colors.white : Colors.black87, fontSize: 13),
               decoration: InputDecoration(
                 hintText: "Search...",
@@ -80,4 +92,3 @@ class PoliceUnitsTopBar extends StatelessWidget {
     );
   }
 }
-

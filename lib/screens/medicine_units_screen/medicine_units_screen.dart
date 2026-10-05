@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicine_system/constant/app_colors.dart';
+import 'package:medicine_system/providers/medicine_units_provider.dart';
 import 'package:medicine_system/screens/app_navigation/widgets/premium_sidebar.dart';
 import 'package:medicine_system/screens/medicine_units_screen/widgets/medicine_units_header.dart';
 import 'package:medicine_system/screens/medicine_units_screen/widgets/medicine_units_table.dart';
 import 'package:medicine_system/screens/medicine_units_screen/widgets/medicine_units_top_bar.dart';
 import 'package:medicine_system/widgets/top_right_header_actions.dart';
 
-class MedicineUnitsScreen extends StatelessWidget {
+class MedicineUnitsScreen extends ConsumerWidget {
   const MedicineUnitsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -38,17 +40,25 @@ class MedicineUnitsScreen extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              MedicineUnitsHeader(),
-              SizedBox(height: 20),
-              MedicineUnitsTopBar(),
-              SizedBox(height: 16),
-              MedicineUnitsTable(),
-            ],
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (scrollInfo) {
+            if (scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent - 200) {
+              ref.read(medicineUnitsProvider.notifier).loadMore();
+            }
+            return false;
+          },
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                MedicineUnitsHeader(),
+                SizedBox(height: 20),
+                MedicineUnitsTopBar(),
+                SizedBox(height: 16),
+                MedicineUnitsTable(),
+              ],
+            ),
           ),
         ),
       ),

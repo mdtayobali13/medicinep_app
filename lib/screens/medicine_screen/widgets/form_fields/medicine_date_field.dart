@@ -7,12 +7,16 @@ class MedicineDateField extends StatefulWidget {
   final String label;
   final String hint;
   final String? initialValue;
+  final TextEditingController? controller;
+  final ValueChanged<String>? onChanged;
 
   const MedicineDateField({
     super.key,
     required this.label,
     required this.hint,
     this.initialValue,
+    this.controller,
+    this.onChanged,
   });
 
   @override
@@ -20,12 +24,16 @@ class MedicineDateField extends StatefulWidget {
 }
 
 class _MedicineDateFieldState extends State<MedicineDateField> {
-  late final TextEditingController _controller;
+  late final TextEditingController _internalController;
+
+  TextEditingController get _effectiveController => widget.controller ?? _internalController;
 
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.initialValue);
+    if (widget.controller == null) {
+      _internalController = TextEditingController(text: widget.initialValue);
+    }
   }
 
   Future<void> _pickDate() async {
@@ -75,15 +83,21 @@ class _MedicineDateFieldState extends State<MedicineDateField> {
     );
 
     if (picked != null) {
+      final formatted = DateFormat('dd-MM-yyyy').format(picked);
       setState(() {
-        _controller.text = DateFormat('dd-MM-yyyy').format(picked);
+        _effectiveController.text = formatted;
       });
+      if (widget.onChanged != null) {
+        widget.onChanged!(formatted);
+      }
     }
   }
-  
+
   @override
   void dispose() {
-    _controller.dispose();
+    if (widget.controller == null) {
+      _internalController.dispose();
+    }
     super.dispose();
   }
 
@@ -91,7 +105,7 @@ class _MedicineDateFieldState extends State<MedicineDateField> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return MedicineTextField(
-      controller: _controller,
+      controller: _effectiveController,
       label: widget.label,
       hint: widget.hint.isNotEmpty ? widget.hint : "Select ${widget.label}",
       readOnly: true,

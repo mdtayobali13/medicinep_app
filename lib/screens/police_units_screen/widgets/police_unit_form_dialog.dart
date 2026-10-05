@@ -1,17 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-class PoliceUnitFormDialog extends StatelessWidget {
+class PoliceUnitFormDialog extends StatefulWidget {
   final bool isEdit;
   final String? initialName;
-  final String? initialIndex;
+  final void Function(String name)? onSave;
 
   const PoliceUnitFormDialog({
     super.key,
     this.isEdit = false,
     this.initialName,
-    this.initialIndex,
+    this.onSave,
   });
+
+  @override
+  State<PoliceUnitFormDialog> createState() => _PoliceUnitFormDialogState();
+}
+
+class _PoliceUnitFormDialogState extends State<PoliceUnitFormDialog> {
+  late TextEditingController _nameController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.initialName ?? '');
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +46,7 @@ class PoliceUnitFormDialog extends StatelessWidget {
       backgroundColor: dialogBg,
       surfaceTintColor: dialogBg,
       child: Container(
-        width: 400, // To make it look good on larger screens too
+        width: 400,
         padding: const EdgeInsets.all(0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -47,7 +66,7 @@ class PoliceUnitFormDialog extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    isEdit ? "Edit Police Unit" : "Add Police Unit",
+                    widget.isEdit ? "Edit Police Unit" : "Add Police Unit",
                     style: TextStyle(
                       color: headerTextColor,
                       fontSize: 16,
@@ -83,7 +102,7 @@ class PoliceUnitFormDialog extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
-                    initialValue: initialName,
+                    controller: _nameController,
                     style: TextStyle(color: textColor),
                     decoration: InputDecoration(
                       hintText: "Enter Police Unit Name",
@@ -110,55 +129,17 @@ class PoliceUnitFormDialog extends StatelessWidget {
                       isDense: true,
                     ),
                   ),
-                  const SizedBox(height: 20),
-
-                  // Index Field
-                  Text(
-                    "Index",
-                    style: TextStyle(
-                      color: labelColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    initialValue: initialIndex,
-                    keyboardType: TextInputType.number,
-                    style: TextStyle(color: textColor),
-                    decoration: InputDecoration(
-                      hintText: "Enter Index Number",
-                      hintStyle: TextStyle(
-                        color: isDark ? Colors.white38 : Colors.grey.shade400,
-                        fontSize: 13,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 10,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(6),
-                        borderSide: BorderSide(color: isDark ? Colors.white24 : Colors.grey.shade300),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(6),
-                        borderSide: BorderSide(color: isDark ? Colors.white24 : Colors.grey.shade300),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(6),
-                        borderSide: const BorderSide(color: Colors.blue),
-                      ),
-                      isDense: true,
-                    ),
-                  ),
-
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 24),
 
                   // Save Button
                   Align(
                     alignment: Alignment.centerRight,
                     child: ElevatedButton.icon(
                       onPressed: () {
+                        final val = _nameController.text.trim();
+                        if (val.isNotEmpty && widget.onSave != null) {
+                          widget.onSave!(val);
+                        }
                         Navigator.pop(context);
                       },
                       icon: const Icon(CupertinoIcons.floppy_disk, size: 18),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MedicineTextField extends StatelessWidget {
   final String label;
@@ -9,6 +10,8 @@ class MedicineTextField extends StatelessWidget {
   final bool readOnly;
   final VoidCallback? onTap;
   final TextEditingController? controller;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
 
   const MedicineTextField({
     super.key,
@@ -20,6 +23,8 @@ class MedicineTextField extends StatelessWidget {
     this.readOnly = false,
     this.onTap,
     this.controller,
+    this.keyboardType,
+    this.inputFormatters,
   });
 
   @override
@@ -55,6 +60,8 @@ class MedicineTextField extends StatelessWidget {
             enabled: enabled,
             readOnly: readOnly,
             onTap: onTap,
+            keyboardType: keyboardType,
+            inputFormatters: inputFormatters,
             style: TextStyle(color: textColor, fontSize: 14),
             decoration: InputDecoration(
               hintText: hint.isNotEmpty ? hint : "Enter $label",

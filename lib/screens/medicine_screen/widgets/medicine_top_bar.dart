@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:medicine_system/providers/medicines_provider.dart';
 
-class MedicineTopBar extends StatelessWidget {
+class MedicineTopBar extends ConsumerWidget {
   const MedicineTopBar({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark ? const Color(0xFF1E2226) : Colors.white;
     final borderColor = isDark ? Colors.white12 : Colors.grey.shade300;
@@ -62,6 +64,9 @@ class MedicineTopBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(6),
             ),
             child: TextField(
+              onChanged: (val) {
+                ref.read(medicinesProvider.notifier).fetchMedicines(search: val);
+              },
               style: TextStyle(color: isDark ? Colors.white : Colors.black87, fontSize: 13),
               decoration: InputDecoration(
                 hintText: "Search...",
@@ -80,4 +85,3 @@ class MedicineTopBar extends StatelessWidget {
     );
   }
 }
-

@@ -1,17 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-class DesignationFormDialog extends StatelessWidget {
+class DesignationFormDialog extends StatefulWidget {
   final bool isEdit;
   final String? initialName;
   final String? initialIndex;
+  final void Function(String name, int? index)? onSave;
 
   const DesignationFormDialog({
     super.key,
     this.isEdit = false,
     this.initialName,
     this.initialIndex,
+    this.onSave,
   });
+
+  @override
+  State<DesignationFormDialog> createState() => _DesignationFormDialogState();
+}
+
+class _DesignationFormDialogState extends State<DesignationFormDialog> {
+  late TextEditingController _nameController;
+  late TextEditingController _indexController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.initialName ?? '');
+    _indexController = TextEditingController(text: widget.initialIndex ?? '');
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _indexController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +51,7 @@ class DesignationFormDialog extends StatelessWidget {
       backgroundColor: dialogBg,
       surfaceTintColor: dialogBg,
       child: Container(
-        width: 400, // To make it look good on larger screens too
+        width: 400,
         padding: const EdgeInsets.all(0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -47,7 +71,7 @@ class DesignationFormDialog extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    isEdit ? "Edit Designation" : "Add Designation",
+                    widget.isEdit ? "Edit Designation" : "Add Designation",
                     style: TextStyle(
                       color: headerTextColor,
                       fontSize: 16,
@@ -83,7 +107,7 @@ class DesignationFormDialog extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
-                    initialValue: initialName,
+                    controller: _nameController,
                     style: TextStyle(color: textColor),
                     decoration: InputDecoration(
                       hintText: "Enter Designation Name",
@@ -110,11 +134,11 @@ class DesignationFormDialog extends StatelessWidget {
                       isDense: true,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
 
                   // Index Field
                   Text(
-                    "Index",
+                    "Index / Order",
                     style: TextStyle(
                       color: labelColor,
                       fontSize: 14,
@@ -123,11 +147,11 @@ class DesignationFormDialog extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
-                    initialValue: initialIndex,
+                    controller: _indexController,
                     keyboardType: TextInputType.number,
                     style: TextStyle(color: textColor),
                     decoration: InputDecoration(
-                      hintText: "Enter Index Number",
+                      hintText: "Enter Index Number (e.g. 1, 2, 3)",
                       hintStyle: TextStyle(
                         color: isDark ? Colors.white38 : Colors.grey.shade400,
                         fontSize: 13,
@@ -151,14 +175,18 @@ class DesignationFormDialog extends StatelessWidget {
                       isDense: true,
                     ),
                   ),
-
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 24),
 
                   // Save Button
                   Align(
                     alignment: Alignment.centerRight,
                     child: ElevatedButton.icon(
                       onPressed: () {
+                        final val = _nameController.text.trim();
+                        final idxVal = int.tryParse(_indexController.text.trim());
+                        if (val.isNotEmpty && widget.onSave != null) {
+                          widget.onSave!(val, idxVal);
+                        }
                         Navigator.pop(context);
                       },
                       icon: const Icon(CupertinoIcons.floppy_disk, size: 18),

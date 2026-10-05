@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:medicine_system/providers/medicine_units_provider.dart';
 import 'package:medicine_system/screens/medicine_units_screen/widgets/medicine_unit_form_dialog.dart';
 
-class MedicineUnitsHeader extends StatelessWidget {
+class MedicineUnitsHeader extends ConsumerWidget {
   const MedicineUnitsHeader({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
@@ -28,7 +30,11 @@ class MedicineUnitsHeader extends StatelessWidget {
             onPressed: () {
               showDialog(
                 context: context,
-                builder: (context) => const MedicineUnitFormDialog(),
+                builder: (dialogCtx) => MedicineUnitFormDialog(
+                  onSave: (name) {
+                    ref.read(medicineUnitsProvider.notifier).createUnit(name);
+                  },
+                ),
               );
             },
             icon: const Icon(CupertinoIcons.add_circled, size: 16),

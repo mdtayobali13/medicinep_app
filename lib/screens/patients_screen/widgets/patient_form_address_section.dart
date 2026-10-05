@@ -35,13 +35,41 @@ class PatientFormAddressSection extends StatelessWidget {
       children: [
         Row(
           children: [
-            Expanded(child: MedicineDropdownField(label: "Division", hint: "", initialValue: initialData?['${prefix}division'])),
+            Expanded(
+              child: MedicineDropdownField<String>(
+                label: "Division",
+                hint: "Select division",
+                value: initialData?['${prefix}division'],
+                items: ['Dhaka', 'Chittagong', 'Rajshahi'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+              ),
+            ),
             const SizedBox(width: 16),
-            Expanded(child: MedicineDropdownField(label: "District", hint: "", initialValue: initialData?['${prefix}district'])),
+            Expanded(
+              child: MedicineDropdownField<String>(
+                label: "District",
+                hint: "Select district",
+                value: initialData?['${prefix}district'],
+                items: ['District 1', 'District 2'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+              ),
+            ),
             const SizedBox(width: 16),
-            Expanded(child: MedicineDropdownField(label: "Upazila", hint: "", initialValue: initialData?['${prefix}upazila'])),
+            Expanded(
+              child: MedicineDropdownField<String>(
+                label: "Upazila",
+                hint: "Select upazila",
+                value: initialData?['${prefix}upazila'],
+                items: ['Upazila 1', 'Upazila 2'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+              ),
+            ),
             const SizedBox(width: 16),
-            Expanded(child: MedicineDropdownField(label: "Union", hint: "", initialValue: initialData?['${prefix}union'])),
+            Expanded(
+              child: MedicineDropdownField<String>(
+                label: "Union",
+                hint: "Select union",
+                value: initialData?['${prefix}union'],
+                items: ['Union 1', 'Union 2'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 16),
@@ -61,17 +89,36 @@ class PatientFormAddressSection extends StatelessWidget {
   Widget _buildMobile() {
     return Column(
       children: [
-        MedicineDropdownField(label: "Division", hint: "", initialValue: initialData?['${prefix}division']),
+        MedicineDropdownField<String>(
+          label: "Division",
+          hint: "Select division",
+          value: initialData?['${prefix}division'],
+          items: ['Dhaka', 'Chittagong', 'Rajshahi'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+        ),
         const SizedBox(height: 16),
-        MedicineDropdownField(label: "District", hint: "", initialValue: initialData?['${prefix}district']),
+        MedicineDropdownField<String>(
+          label: "District",
+          hint: "Select district",
+          value: initialData?['${prefix}district'],
+          items: ['District 1', 'District 2'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+        ),
         const SizedBox(height: 16),
-        MedicineDropdownField(label: "Upazila", hint: "", initialValue: initialData?['${prefix}upazila']),
+        MedicineDropdownField<String>(
+          label: "Upazila",
+          hint: "Select upazila",
+          value: initialData?['${prefix}upazila'],
+          items: ['Upazila 1', 'Upazila 2'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+        ),
         const SizedBox(height: 16),
-        MedicineDropdownField(label: "Union", hint: "", initialValue: initialData?['${prefix}union']),
+        MedicineDropdownField<String>(
+          label: "Union",
+          hint: "Select union",
+          value: initialData?['${prefix}union'],
+          items: ['Union 1', 'Union 2'].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+        ),
         const SizedBox(height: 16),
         MedicineTextField(label: villageLabel, hint: "", initialValue: initialData?['${prefix}village']),
       ],
     );
   }
 }
-

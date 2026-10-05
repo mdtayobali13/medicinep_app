@@ -1,15 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:medicine_system/models/patient_model.dart';
+import 'package:medicine_system/providers/patients_provider.dart';
 import 'package:medicine_system/screens/patients_screen/widgets/patient_form_personal_section.dart';
 import 'package:medicine_system/screens/patients_screen/widgets/patient_form_job_section.dart';
 import 'package:medicine_system/screens/patients_screen/widgets/patient_form_physical_section.dart';
 import 'package:medicine_system/screens/patients_screen/widgets/patient_form_address_section.dart';
 
-class PatientFormDialog extends StatelessWidget {
+class PatientFormDialog extends ConsumerStatefulWidget {
   final bool isEdit;
+  final PatientModel? item;
   final Map<String, String>? initialData;
-  
-  const PatientFormDialog({super.key, this.isEdit = false, this.initialData});
+
+  const PatientFormDialog({
+    super.key,
+    this.isEdit = false,
+    this.item,
+    this.initialData,
+  });
+
+  @override
+  ConsumerState<PatientFormDialog> createState() => _PatientFormDialogState();
+}
+
+class _PatientFormDialogState extends ConsumerState<PatientFormDialog> {
+  bool _isSaving = false;
+
+  Future<void> _handleSave() async {
+    setState(() => _isSaving = true);
+
+    final Map<String, dynamic> data = {
+      'name': widget.initialData?['name'] ?? widget.item?.name ?? 'Patient',
+      'bp_no': widget.initialData?['bp_number'] ?? widget.item?.bpNo ?? '',
+      'mobile': widget.initialData?['phone'] ?? widget.item?.mobile ?? '',
+      'patient_type': widget.initialData?['status'] ?? widget.item?.patientType ?? 'Regular',
+    };
+
+    bool success = false;
+    if (widget.isEdit && widget.item != null) {
+      success = await ref.read(patientsProvider.notifier).updatePatient(widget.item!.id, data);
+    } else {
+      success = await ref.read(patientsProvider.notifier).createPatient(data);
+    }
+
+    if (mounted) {
+      setState(() => _isSaving = false);
+      if (success) {
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to save patient record.')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +84,10 @@ class PatientFormDialog extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(isEdit ? "Edit Patient" : "Add Patient", style: TextStyle(color: headerTitleColor, fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(
+                    widget.isEdit ? "Edit Patient" : "Add Patient",
+                    style: TextStyle(color: headerTitleColor, fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
                   InkWell(
                     onTap: () => Navigator.pop(context),
                     child: Icon(CupertinoIcons.clear, size: 20, color: isDark ? Colors.white70 : Colors.grey.shade600),
@@ -47,22 +95,22 @@ class PatientFormDialog extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             // Scrollable Content
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(24),
                 child: Column(
                   children: [
-                    PatientFormPersonalSection(isDesktop: isDesktop, initialData: initialData),
+                    PatientFormPersonalSection(isDesktop: isDesktop, initialData: widget.initialData),
                     const SizedBox(height: 16),
-                    PatientFormJobSection(isDesktop: isDesktop, initialData: initialData),
+                    PatientFormJobSection(isDesktop: isDesktop, initialData: widget.initialData),
                     const SizedBox(height: 16),
-                    PatientFormPhysicalSection(isDesktop: isDesktop, initialData: initialData),
+                    PatientFormPhysicalSection(isDesktop: isDesktop, initialData: widget.initialData),
                     const SizedBox(height: 16),
                     PatientFormAddressSection(
                       isDesktop: isDesktop,
-                      initialData: initialData,
+                      initialData: widget.initialData,
                       prefix: 'present_',
                       title: "Present Address",
                       villageLabel: "Present Village:",
@@ -71,7 +119,7 @@ class PatientFormDialog extends StatelessWidget {
                     const SizedBox(height: 16),
                     PatientFormAddressSection(
                       isDesktop: isDesktop,
-                      initialData: initialData,
+                      initialData: widget.initialData,
                       prefix: 'permanent_',
                       title: "Permanent Address",
                       villageLabel: "Permanent Village:",
@@ -89,16 +137,23 @@ class PatientFormDialog extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                    onPressed: _isSaving ? null : _handleSave,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue.shade600,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                     ),
-                    child: Text(isEdit ? "Update Patient" : "Save Patient", style: const TextStyle(fontWeight: FontWeight.bold)),
+                    child: _isSaving
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                          )
+                        : Text(
+                            widget.isEdit ? "Update Patient" : "Save Patient",
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
                   ),
                 ],
               ),

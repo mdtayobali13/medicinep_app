@@ -30,19 +30,33 @@ class AuthRepository {
       };
 
       var response = await apiServices.postServices(url: api.login, body: bodyData);
-      if (response != null) {
-        if (response["data"] is Map) {
-          var data = response["data"];
-          if (data["role"] is String) {
-            await storageServices.setAppRoll(data["role"].toString());
+      if (response is Map) {
+        dynamic data = response["data"] ?? response;
+        if (data is Map) {
+          String? token = data["access_token"]?.toString() ??
+              data["accessToken"]?.toString() ??
+              data["token"]?.toString() ??
+              response["access_token"]?.toString() ??
+              response["token"]?.toString();
+
+          if (token != null && token.isNotEmpty) {
+            await storageServices.setToken(token);
+            appLog("Successfully saved Bearer Token!");
+
+            if (data["user"] is Map) {
+              final userMap = data["user"] as Map;
+              final role = userMap["role"]?.toString() ?? userMap["role_id"]?.toString() ?? "ADMIN";
+              await storageServices.setAppRoll(role);
+            } else if (data["role"] != null) {
+              await storageServices.setAppRoll(data["role"].toString());
+            }
+
+            if (data["refresh_token"] != null || data["refreshToken"] != null) {
+              final refToken = (data["refresh_token"] ?? data["refreshToken"]).toString();
+              await storageServices.setRefreshToken(refToken);
+            }
+            return true;
           }
-          if (data["accessToken"] is String) {
-            await storageServices.setToken(data["accessToken"].toString());
-          }
-          if (data["refreshToken"] is String) {
-            await storageServices.setRefreshToken(data["refreshToken"].toString());
-          }
-          return true;
         }
       }
     } catch (e) {

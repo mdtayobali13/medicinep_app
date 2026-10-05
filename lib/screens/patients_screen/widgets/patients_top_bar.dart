@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:medicine_system/providers/patients_provider.dart';
 
-class PatientsTopBar extends StatelessWidget {
+class PatientsTopBar extends ConsumerWidget {
   const PatientsTopBar({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark ? const Color(0xFF1E2226) : Colors.white;
     final borderColor = isDark ? Colors.white12 : Colors.grey.shade300;
@@ -53,24 +55,29 @@ class PatientsTopBar extends StatelessWidget {
             ),
           ),
         ),
-        Container(
-          width: 250,
-          decoration: BoxDecoration(
-            color: cardBg,
-            border: Border.all(color: borderColor),
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: TextField(
-            style: TextStyle(color: isDark ? Colors.white : Colors.black87),
-            decoration: InputDecoration(
-              hintText: "Search...",
-              hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.grey.shade400),
-              prefixIcon: Icon(CupertinoIcons.search, size: 20, color: isDark ? Colors.white38 : Colors.grey.shade400),
-              border: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              isDense: true,
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.only(left: 12),
+            decoration: BoxDecoration(
+              color: cardBg,
+              border: Border.all(color: borderColor),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: TextField(
+              onChanged: (val) {
+                ref.read(patientsProvider.notifier).fetchPatients(search: val);
+              },
+              style: TextStyle(color: isDark ? Colors.white : Colors.black87, fontSize: 13),
+              decoration: InputDecoration(
+                hintText: "Search...",
+                hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.grey.shade400, fontSize: 13),
+                prefixIcon: Icon(CupertinoIcons.search, size: 18, color: isDark ? Colors.white38 : Colors.grey.shade400),
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                isDense: true,
+              ),
             ),
           ),
         ),
@@ -78,4 +85,3 @@ class PatientsTopBar extends StatelessWidget {
     );
   }
 }
-

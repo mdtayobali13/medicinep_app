@@ -21,7 +21,16 @@ class PatientFormPhysicalSection extends StatelessWidget {
   Widget _buildDesktop() {
     return Row(
       children: [
-        Expanded(child: MedicineDropdownField(label: "Blood group", hint: "", initialValue: initialData?['blood_group'])),
+        Expanded(
+          child: MedicineDropdownField<String>(
+            label: "Blood group",
+            hint: "Select blood group",
+            value: initialData?['blood_group'],
+            items: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
+                .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                .toList(),
+          ),
+        ),
         const SizedBox(width: 16),
         Expanded(child: MedicineTextField(label: "Height (ft)", hint: "", initialValue: initialData?['height'])),
         const SizedBox(width: 16),
@@ -35,7 +44,14 @@ class PatientFormPhysicalSection extends StatelessWidget {
   Widget _buildMobile() {
     return Column(
       children: [
-        MedicineDropdownField(label: "Blood group", hint: "", initialValue: initialData?['blood_group']),
+        MedicineDropdownField<String>(
+          label: "Blood group",
+          hint: "Select blood group",
+          value: initialData?['blood_group'],
+          items: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
+              .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+              .toList(),
+        ),
         const SizedBox(height: 16),
         MedicineTextField(label: "Height (ft)", hint: "", initialValue: initialData?['height']),
         const SizedBox(height: 16),

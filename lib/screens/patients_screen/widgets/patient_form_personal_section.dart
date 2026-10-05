@@ -49,9 +49,27 @@ class PatientFormPersonalSection extends StatelessWidget {
                 children: [
                   Expanded(child: MedicineDateField(label: "Date of Birth", hint: "Select date", initialValue: initialData?['dob'])),
                   const SizedBox(width: 16),
-                  Expanded(child: MedicineDropdownField(label: "Gender", hint: "", initialValue: initialData?['gender'])),
+                  Expanded(
+                    child: MedicineDropdownField<String>(
+                      label: "Gender",
+                      hint: "Select gender",
+                      value: initialData?['gender'],
+                      items: ['Male', 'Female', 'Other']
+                          .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                          .toList(),
+                    ),
+                  ),
                   const SizedBox(width: 16),
-                  Expanded(child: MedicineDropdownField(label: "Marital status", hint: "", initialValue: initialData?['marital'])),
+                  Expanded(
+                    child: MedicineDropdownField<String>(
+                      label: "Marital status",
+                      hint: "Select marital status",
+                      value: initialData?['marital'],
+                      items: ['Single', 'Married', 'Divorced', 'Widowed']
+                          .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                          .toList(),
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -76,9 +94,23 @@ class PatientFormPersonalSection extends StatelessWidget {
         const SizedBox(height: 16),
         MedicineDateField(label: "Date of Birth", hint: "Select date", initialValue: initialData?['dob']),
         const SizedBox(height: 16),
-        MedicineDropdownField(label: "Gender", hint: "", initialValue: initialData?['gender']),
+        MedicineDropdownField<String>(
+          label: "Gender",
+          hint: "Select gender",
+          value: initialData?['gender'],
+          items: ['Male', 'Female', 'Other']
+              .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+              .toList(),
+        ),
         const SizedBox(height: 16),
-        MedicineDropdownField(label: "Marital status", hint: "", initialValue: initialData?['marital']),
+        MedicineDropdownField<String>(
+          label: "Marital status",
+          hint: "Select marital status",
+          value: initialData?['marital'],
+          items: ['Single', 'Married', 'Divorced', 'Widowed']
+              .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+              .toList(),
+        ),
       ],
     );
   }

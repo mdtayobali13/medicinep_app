@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicine_system/routes/app_routes_key.dart';
+import 'package:medicine_system/services/storage/storage_services.dart';
 import 'package:medicine_system/utils/app_theme.dart';
 import 'package:go_router/go_router.dart';
 
@@ -194,9 +195,12 @@ class _UserProfileDropdownState extends ConsumerState<UserProfileDropdown> {
           child: Divider(height: 1, color: isDark ? Colors.grey.shade800 : Colors.grey.shade200),
         ),
         InkWell(
-          onTap: () {
+          onTap: () async {
             _menuController.close();
-            GoRouter.of(context).goNamed(AppRoutesKey.instance.signInScreen);
+            await StorageServices.instance.logout();
+            if (context.mounted) {
+              GoRouter.of(context).goNamed(AppRoutesKey.instance.signInScreen);
+            }
           },
           child: const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),

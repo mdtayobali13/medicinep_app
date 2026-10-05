@@ -11,6 +11,7 @@ class PatientListCard extends StatelessWidget {
   final String policeUnit;
   final String status;
   final String phone;
+  final VoidCallback? onDelete;
 
   const PatientListCard({
     super.key,
@@ -21,6 +22,7 @@ class PatientListCard extends StatelessWidget {
     required this.policeUnit,
     required this.status,
     required this.phone,
+    this.onDelete,
   });
 
   @override
@@ -192,7 +194,7 @@ class PatientListCard extends StatelessWidget {
             ),
           );
         } else if (value == 'delete') {
-          // Delete logic
+          if (onDelete != null) onDelete!();
         }
       },
       itemBuilder: (context) => [

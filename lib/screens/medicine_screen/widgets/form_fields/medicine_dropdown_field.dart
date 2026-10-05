@@ -2,46 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-class MedicineDropdownField extends StatefulWidget {
+class MedicineDropdownField<T> extends StatelessWidget {
   final String label;
   final String hint;
-  final String? initialValue;
+  final T? value;
+  final List<DropdownMenuItem<T>> items;
+  final ValueChanged<T?>? onChanged;
+  final bool isLoading;
 
   const MedicineDropdownField({
     super.key,
     required this.label,
     required this.hint,
-    this.initialValue,
+    this.value,
+    this.items = const [],
+    this.onChanged,
+    this.isLoading = false,
   });
-
-  @override
-  State<MedicineDropdownField> createState() => _MedicineDropdownFieldState();
-}
-
-class _MedicineDropdownFieldState extends State<MedicineDropdownField> {
-  late final ValueNotifier<String?> _valueNotifier;
-
-  @override
-  void initState() {
-    super.initState();
-    _valueNotifier = ValueNotifier<String?>(widget.initialValue);
-  }
-
-  @override
-  void dispose() {
-    _valueNotifier.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final labelColor = isDark ? Colors.white70 : Colors.grey.shade800;
-    final textColor = isDark ? Colors.white : Colors.black;
     final hintColor = isDark ? Colors.white38 : Colors.grey.shade400;
     final borderColor = isDark ? Colors.white24 : Colors.grey.shade300;
     final fieldBg = isDark ? const Color(0xFF1E2226) : Colors.white;
     final dropdownBg = isDark ? const Color(0xFF262B30) : Colors.white;
+
+    // Filter valid value to prevent DropdownButton assertion if value isn't in items
+    final bool hasValidValue = value != null && items.any((element) => element.value == value);
+    final T? selectedValue = hasValidValue ? value : null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +39,7 @@ class _MedicineDropdownFieldState extends State<MedicineDropdownField> {
         Padding(
           padding: const EdgeInsets.only(bottom: 8),
           child: Text(
-            widget.label,
+            label,
             style: TextStyle(
               color: labelColor,
               fontSize: 12,
@@ -61,65 +51,56 @@ class _MedicineDropdownFieldState extends State<MedicineDropdownField> {
         ),
         SizedBox(
           height: 42,
-          child: ValueListenableBuilder<String?>(
-            valueListenable: _valueNotifier,
-            builder: (context, currentValue, _) {
-              return DropdownButtonFormField2<String>(
-                isExpanded: true,
-                value: currentValue,
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 0,
-                    horizontal: 12,
+          child: DropdownButtonFormField2<T>(
+            isExpanded: true,
+            value: selectedValue,
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 0,
+                horizontal: 12,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(6),
+                borderSide: BorderSide(color: borderColor),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(6),
+                borderSide: BorderSide(color: borderColor),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(6),
+                borderSide: const BorderSide(color: Colors.blue),
+              ),
+              fillColor: fieldBg,
+              filled: true,
+            ),
+            hint: isLoading
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : Text(
+                    hint.isNotEmpty ? hint : "Select $label",
+                    style: TextStyle(color: hintColor, fontSize: 13),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: BorderSide(color: borderColor),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: BorderSide(color: borderColor),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: const BorderSide(color: Colors.blue),
-                  ),
-                  fillColor: fieldBg,
-                  filled: true,
-                ),
-                hint: Text(
-                  widget.hint.isNotEmpty ? widget.hint : "Select ${widget.label}",
-                  style: TextStyle(color: hintColor, fontSize: 13),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                iconStyleData: IconStyleData(
-                  icon: Icon(
-                    CupertinoIcons.chevron_down,
-                    color: hintColor,
-                    size: 16,
-                  ),
-                ),
-                items: ['Option 1', 'Option 2', 'Option 3', if (widget.initialValue != null && !['Option 1', 'Option 2', 'Option 3'].contains(widget.initialValue)) widget.initialValue!].map((item) {
-                  return DropdownMenuItem<String>(
-                    value: item,
-                    child: Text(
-                      item,
-                      style: TextStyle(fontSize: 14, color: textColor),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  _valueNotifier.value = value;
-                },
-                dropdownStyleData: DropdownStyleData(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: dropdownBg,
-                  ),
-                ),
-              );
-            },
+            iconStyleData: IconStyleData(
+              icon: Icon(
+                CupertinoIcons.chevron_down,
+                color: hintColor,
+                size: 16,
+              ),
+            ),
+            items: items,
+            onChanged: onChanged,
+            dropdownStyleData: DropdownStyleData(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: dropdownBg,
+              ),
+            ),
           ),
         ),
       ],

@@ -7,7 +7,6 @@ import 'package:medicine_system/routes/app_routes_key.dart';
 import 'package:medicine_system/screens/auth_screen/sign_in_screen/provider/sign_in_provider.dart';
 import 'package:medicine_system/services/storage/storage_services.dart';
 import 'package:medicine_system/utils/app_log.dart';
-import 'package:medicine_system/utils/app_snack_bar.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
@@ -39,16 +38,16 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
   Future<void> checkLoginFunction() async {
     try {
-      if (!formKey.currentState!.validate()) {
+      if (formKey.currentState == null || !formKey.currentState!.validate()) {
         return;
       }
-      final response = await ref
+      final bool response = await ref
           .read(signInProvider.notifier)
           .signIn(emailTextEditingController.text.trim(), passwordTextEditingController.text.trim());
       if (response) {
         AppRoutes.instance.go(AppRoutesKey.instance.homeScreen);
       } else {
-        AppSnackBar.instance.error("Invalid email or password");
+        appLog("Login failed, user remains on sign in screen.");
       }
     } catch (e) {
       errorLog("checkLoginFunction", e);
@@ -126,8 +125,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-
-                   Text(
+                    Text(
                     "Medicine System",
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -278,35 +276,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 10),
-
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                              onPressed: () {
-                                AppRoutes.instance.pushNamed(AppRoutesKey.instance.forgotScreen);
-                              },
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                                minimumSize: Size.zero,
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
-                              child: const Text(
-                                "Forgot password?",
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: primaryColor,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 22),
+                          const SizedBox(height: 24),
 
                           Consumer(
                             builder: (context, ref, child) {
                               final isLoading = ref.watch(signInProvider);
                               return Container(
+                                width: double.infinity,
                                 height: 48,
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
@@ -328,6 +304,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.transparent,
                                     shadowColor: Colors.transparent,
+                                    minimumSize: const Size(double.infinity, 48),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -353,59 +330,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                               );
                             },
                           ),
-                          const SizedBox(height: 12),
-
-                          SizedBox(
-                            width: double.infinity,
-                            height: 46,
-                            child: OutlinedButton(
-                              onPressed: continueAsGuest,
-                              style: OutlinedButton.styleFrom(
-                                side: BorderSide(
-                                  color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: Text(
-                                "Browse as Guest",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: textColor,
-                                ),
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Don't have an account?",
-                        style: TextStyle(fontSize: 13, color: subTextColor),
-                      ),
-                      const SizedBox(width: 6),
-                      GestureDetector(
-                        onTap: () {
-                          AppRoutes.instance.pushNamed(AppRoutesKey.instance.signUpScreen);
-                        },
-                        child: const Text(
-                          "Sign up",
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: primaryColor,
-                          ),
-                        ),
-                      ),
-                    ],
                   ),
                 ],
               ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicine_system/constant/app_colors.dart';
 import 'package:medicine_system/routes/app_routes.dart';
+import 'package:medicine_system/routes/app_routes_key.dart';
+import 'package:medicine_system/services/storage/storage_services.dart';
 import 'package:medicine_system/utils/app_log.dart';
 import 'package:medicine_system/utils/app_size.dart';
 import 'package:medicine_system/utils/gap.dart';
@@ -19,7 +21,7 @@ void callLogOutDialog() {
             Navigator.pop(context);
           },
           overlayColor: WidgetStatePropertyAll(AppColors.instance.transparent),
-          child: Center(child: LogOutDialog()),
+          child: const Center(child: LogOutDialog()),
         ),
       ),
     );
@@ -52,13 +54,25 @@ class LogOutDialog extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: AppButton(backgroundColor: AppColors.instance.gray700, borderColor: AppColors.instance.white50, title: "Cancel"),
+                child: AppButton(
+                  onTap: () => Navigator.pop(context),
+                  backgroundColor: AppColors.instance.gray700,
+                  borderColor: AppColors.instance.white50,
+                  title: "Cancel",
+                ),
               ),
               Gap(width: 20),
               Expanded(
                 child: Consumer(
                   builder: (context, ref, child) {
-                    return AppButton(onTap: () {}, title: "Confirm");
+                    return AppButton(
+                      onTap: () async {
+                        Navigator.pop(context);
+                        await StorageServices.instance.logout();
+                        AppRoutes.instance.go(AppRoutesKey.instance.signInScreen);
+                      },
+                      title: "Confirm",
+                    );
                   },
                 ),
               ),

@@ -55,16 +55,25 @@ class _RoleFormDialogState extends State<RoleFormDialog> {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double dialogWidth = screenWidth > 900 ? 800 : screenWidth * 0.9;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final dialogBg = isDark ? const Color(0xFF1E2226) : Colors.white;
+    final headerBg = isDark ? const Color(0xFF172554) : Colors.blue.shade50;
+    final headerTextColor = isDark ? const Color(0xFF93C5FD) : Colors.blue.shade800;
+    final textColor = isDark ? Colors.white : Colors.black;
+    final cardBg = isDark ? const Color(0xFF262B30) : const Color(0xFFF8FAFC);
+    final borderColor = isDark ? const Color(0xFF333A42) : Colors.grey.shade300;
+    final fieldFillColor = isDark ? const Color(0xFF2A2F35) : Colors.white;
+
     return Dialog(
-      backgroundColor: Colors.white,
-      surfaceTintColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      backgroundColor: dialogBg,
+      surfaceTintColor: dialogBg,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: Container(
         width: dialogWidth,
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
+          color: dialogBg,
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -72,12 +81,12 @@ class _RoleFormDialogState extends State<RoleFormDialog> {
           children: [
             // Dialog Header
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
               decoration: BoxDecoration(
-                color: Colors.blue.shade50,
+                color: headerBg,
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  topRight: Radius.circular(8),
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
                 ),
               ),
               child: Row(
@@ -88,12 +97,12 @@ class _RoleFormDialogState extends State<RoleFormDialog> {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue.shade800,
+                      color: headerTextColor,
                     ),
                   ),
                   InkWell(
                     onTap: () => Navigator.pop(context),
-                    child: Icon(Icons.close, size: 18, color: Colors.blue.shade800),
+                    child: Icon(Icons.close, size: 20, color: headerTextColor),
                   ),
                 ],
               ),
@@ -102,32 +111,38 @@ class _RoleFormDialogState extends State<RoleFormDialog> {
             // Scrollable Content
             Flexible(
               child: Container(
-                color: Colors.white,
+                color: dialogBg,
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Role Name Input
-                      const Text(
+                      Text(
                         "Name",
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: textColor),
                       ),
                       const SizedBox(height: 6),
                       TextField(
                         controller: _roleNameController,
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: textColor),
                         decoration: InputDecoration(
                           hintText: "Enter role name",
-                          hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14, fontWeight: FontWeight.normal),
+                          hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.grey.shade400, fontSize: 14, fontWeight: FontWeight.normal),
+                          filled: true,
+                          fillColor: fieldFillColor,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                            borderSide: BorderSide(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: borderColor),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                            borderSide: BorderSide(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: borderColor),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(color: Color(0xFF10B981), width: 1.5),
                           ),
                         ),
                       ),
@@ -150,7 +165,7 @@ class _RoleFormDialogState extends State<RoleFormDialog> {
                               final double cardWidth = (constraints.maxWidth - ((crossAxisCount - 1) * 12)) / crossAxisCount;
                               return SizedBox(
                                 width: cardWidth,
-                                child: _buildPermissionGroupCard(entry.key, entry.value),
+                                child: _buildPermissionGroupCard(entry.key, entry.value, isDark, cardBg, borderColor, textColor),
                               );
                             }).toList(),
                           );
@@ -166,12 +181,12 @@ class _RoleFormDialogState extends State<RoleFormDialog> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: dialogBg,
                 borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(8),
-                  bottomRight: Radius.circular(8),
+                  bottomLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12),
                 ),
-                border: Border(top: BorderSide(color: Colors.grey.shade200)),
+                border: Border(top: BorderSide(color: borderColor)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -188,11 +203,11 @@ class _RoleFormDialogState extends State<RoleFormDialog> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue.shade600,
+                      backgroundColor: const Color(0xFF10B981),
                       foregroundColor: Colors.white,
                       elevation: 0,
                       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     ),
                     child: const Text("Save", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                   ),
@@ -205,23 +220,30 @@ class _RoleFormDialogState extends State<RoleFormDialog> {
     );
   }
 
-  Widget _buildPermissionGroupCard(String groupTitle, List<String> permissions) {
+  Widget _buildPermissionGroupCard(
+    String groupTitle,
+    List<String> permissions,
+    bool isDark,
+    Color cardBg,
+    Color borderColor,
+    Color textColor,
+  ) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
+        color: cardBg,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: borderColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             groupTitle,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 13,
-              color: Colors.black,
+              color: textColor,
             ),
           ),
           const SizedBox(height: 8),
@@ -243,8 +265,9 @@ class _RoleFormDialogState extends State<RoleFormDialog> {
                         height: 20,
                         child: Checkbox(
                           value: isChecked,
-                          activeColor: Colors.blue.shade600,
-                          side: BorderSide(color: Colors.grey.shade500, width: 1.5),
+                          activeColor: const Color(0xFF10B981),
+                          checkColor: Colors.white,
+                          side: BorderSide(color: isDark ? Colors.white54 : Colors.grey.shade500, width: 1.5),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
                           onChanged: (bool? val) {
                             setState(() {
@@ -257,10 +280,10 @@ class _RoleFormDialogState extends State<RoleFormDialog> {
                       Expanded(
                         child: Text(
                           permission,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                            color: textColor,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
