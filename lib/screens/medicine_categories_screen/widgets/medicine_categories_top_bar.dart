@@ -53,24 +53,26 @@ class MedicineCategoriesTopBar extends StatelessWidget {
             ),
           ),
         ),
-        Container(
-          width: 250,
-          decoration: BoxDecoration(
-            color: cardBg,
-            border: Border.all(color: borderColor),
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: TextField(
-            style: TextStyle(color: isDark ? Colors.white : Colors.black87),
-            decoration: InputDecoration(
-              hintText: "Search...",
-              hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.grey.shade400),
-              prefixIcon: Icon(CupertinoIcons.search, size: 20, color: isDark ? Colors.white38 : Colors.grey.shade400),
-              border: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              isDense: true,
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.only(left: 12),
+            decoration: BoxDecoration(
+              color: cardBg,
+              border: Border.all(color: borderColor),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: TextField(
+              style: TextStyle(color: isDark ? Colors.white : Colors.black87, fontSize: 13),
+              decoration: InputDecoration(
+                hintText: "Search...",
+                hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.grey.shade400, fontSize: 13),
+                prefixIcon: Icon(CupertinoIcons.search, size: 18, color: isDark ? Colors.white38 : Colors.grey.shade400),
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                isDense: true,
+              ),
             ),
           ),
         ),

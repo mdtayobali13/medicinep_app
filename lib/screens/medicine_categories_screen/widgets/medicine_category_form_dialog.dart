@@ -89,11 +89,11 @@ class MedicineCategoryFormDialog extends StatelessWidget {
                       hintText: "Enter Medicine Category Name",
                       hintStyle: TextStyle(
                         color: isDark ? Colors.white38 : Colors.grey.shade400,
-                        fontSize: 14,
+                        fontSize: 13,
                       ),
                       contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
+                        horizontal: 12,
+                        vertical: 10,
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(6),
@@ -130,11 +130,11 @@ class MedicineCategoryFormDialog extends StatelessWidget {
                       hintText: "Enter Index Number",
                       hintStyle: TextStyle(
                         color: isDark ? Colors.white38 : Colors.grey.shade400,
-                        fontSize: 14,
+                        fontSize: 13,
                       ),
                       contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
+                        horizontal: 12,
+                        vertical: 10,
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(6),

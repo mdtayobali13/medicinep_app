@@ -9,10 +9,10 @@ class RolesHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
         color: const Color(0xFF2ECA7F),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -21,7 +21,7 @@ class RolesHeader extends StatelessWidget {
             "Roles",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 20,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -32,15 +32,17 @@ class RolesHeader extends StatelessWidget {
                 builder: (context) => const RoleFormDialog(),
               );
             },
-            icon: const Icon(CupertinoIcons.add_circled, size: 18),
-            label: const Text("Create"),
+            icon: const Icon(CupertinoIcons.add_circled, size: 16),
+            label: const Text("Create", style: TextStyle(fontSize: 13)),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue.shade600,
               foregroundColor: Colors.white,
               elevation: 0,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(6),
               ),
             ),
           ),
