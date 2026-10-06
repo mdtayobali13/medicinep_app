@@ -5,6 +5,7 @@ import 'package:medicine_system/routes/app_routes_key.dart';
 import 'package:medicine_system/services/storage/storage_services.dart';
 import 'package:medicine_system/utils/app_theme.dart';
 import 'package:go_router/go_router.dart';
+import 'package:medicine_system/providers/notifications_provider.dart';
 
 class TopRightHeaderActions extends ConsumerWidget {
   const TopRightHeaderActions({super.key});
@@ -19,7 +20,7 @@ class TopRightHeaderActions extends ConsumerWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildNotificationBell(context, isDark),
+          _buildNotificationBell(context, ref, isDark),
           const SizedBox(width: 16),
           const UserProfileDropdown(),
         ],
@@ -27,7 +28,8 @@ class TopRightHeaderActions extends ConsumerWidget {
     );
   }
 
-  Widget _buildNotificationBell(BuildContext context, bool isDark) {
+  Widget _buildNotificationBell(BuildContext context, WidgetRef ref, bool isDark) {
+    final notificationCount = ref.watch(notificationsProvider).paginatedData?.meta?.total ?? ref.watch(notificationsProvider).notifications.length;
     return InkWell(
       onTap: () {
         final currentUri = GoRouterState.of(context).uri.toString();
@@ -40,25 +42,26 @@ class TopRightHeaderActions extends ConsumerWidget {
         clipBehavior: Clip.none,
         children: [
           Icon(CupertinoIcons.bell, size: 22, color: isDark ? Colors.white70 : Colors.grey.shade700),
-          Positioned(
-            right: -4,
-            top: -4,
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: const BoxDecoration(
-                color: Color(0xFFFF4D4F),
-                shape: BoxShape.circle,
-              ),
-              child: const Text(
-                '2',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
+          if (notificationCount > 0)
+            Positioned(
+              right: -4,
+              top: -4,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFFF4D4F),
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  notificationCount > 99 ? '99+' : notificationCount.toString(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );

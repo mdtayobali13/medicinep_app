@@ -47,6 +47,9 @@ class DistributionModel {
   final int? patientId;
   final String? patientName;
   final String? bpNo;
+  final String? receiverType;
+  final String? prescriptionCode;
+  final String? createdBy;
   final String? distributionDate;
   final String? notes;
   final PatientModel? patient;
@@ -58,6 +61,9 @@ class DistributionModel {
     this.patientId,
     this.patientName,
     this.bpNo,
+    this.receiverType,
+    this.prescriptionCode,
+    this.createdBy,
     this.distributionDate,
     this.notes,
     this.patient,
@@ -73,11 +79,21 @@ class DistributionModel {
       itemList = (json['details'] as List).map((e) => DistributionItemModel.fromJson(e as Map<String, dynamic>)).toList();
     }
 
+    String? createdByName;
+    if (json['created_by'] is Map<String, dynamic>) {
+      createdByName = json['created_by']['name']?.toString();
+    } else if (json['created_by'] != null) {
+      createdByName = json['created_by'].toString();
+    }
+
     return DistributionModel(
       id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '0') ?? 0,
       patientId: json['patient_id'] is int ? json['patient_id'] : int.tryParse(json['patient_id']?.toString() ?? ''),
       patientName: json['patient_name']?.toString() ?? json['patient']?['name']?.toString(),
-      bpNo: json['bp_no']?.toString() ?? json['patient']?['bp_no']?.toString(),
+      bpNo: json['bp_no']?.toString() ?? json['bp_number']?.toString() ?? json['patient']?['bp_number']?.toString() ?? json['patient']?['bp_no']?.toString(),
+      receiverType: json['receiver_type']?.toString(),
+      prescriptionCode: json['prescription_code']?.toString(),
+      createdBy: createdByName,
       distributionDate: json['distribution_date']?.toString() ?? json['created_at']?.toString(),
       notes: json['notes']?.toString(),
       patient: json['patient'] is Map<String, dynamic> ? PatientModel.fromJson(json['patient']) : null,

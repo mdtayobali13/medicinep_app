@@ -1,45 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:medicine_system/providers/roles_provider.dart';
+import 'package:medicine_system/models/role_permission_model.dart';
+import 'package:medicine_system/utils/app_snack_bar.dart';
 
-class RoleFormDialog extends StatefulWidget {
+class RoleFormDialog extends ConsumerStatefulWidget {
   final bool isEdit;
-  final String? initialName;
+  final RoleModel? initialRole;
 
-  const RoleFormDialog({super.key, this.isEdit = false, this.initialName});
+  const RoleFormDialog({super.key, this.isEdit = false, this.initialRole});
 
   @override
-  State<RoleFormDialog> createState() => _RoleFormDialogState();
+  ConsumerState<RoleFormDialog> createState() => _RoleFormDialogState();
 }
 
-class _RoleFormDialogState extends State<RoleFormDialog> {
+class _RoleFormDialogState extends ConsumerState<RoleFormDialog> {
   late final TextEditingController _roleNameController;
-  final Map<String, bool> _selectedPermissions = {};
+  final Map<int, bool> _selectedPermissions = {};
 
-  final Map<String, List<String>> _permissionGroups = {
-    'Dashboard': ['View Dashboard'],
-    'User Management': ['Create User', 'Edit User', 'Delete User', 'View User'],
-    'Role': ['Create Role', 'Edit Role', 'Delete Role', 'View Role', 'Assign Role'],
-    'Permission': ['View Permission'],
-    'Category': ['Create Category', 'Edit Category', 'Delete Category', 'View Category'],
-    'Designation': ['Create Designation', 'Edit Designation', 'Delete Designation', 'View Designation'],
-    'Distribution': ['Create Distribution', 'Edit Distribution', 'Delete Distribution', 'View Distribution'],
-    'Medicine': ['Create Medicine', 'Edit Medicine', 'Delete Medicine', 'View Medicine', 'Assign Medicine'],
-    'Medicine Unit': ['Create Medicine Unit', 'Edit Medicine Unit', 'Delete Medicine Unit', 'View Medicine Unit'],
-    'Patient': ['Create Patient', 'Edit Patient', 'Delete Patient', 'View Patient', 'Assign Patient'],
-    'Police Unit': ['Create Police Unit', 'Edit Police Unit', 'Delete Police Unit', 'View Police Unit'],
-    'Stock': ['Create Stock', 'Edit Stock', 'Delete Stock', 'View Stock'],
-    'Website Setting': ['View Website Setting'],
-  };
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _roleNameController = TextEditingController(text: widget.initialName ?? '');
+    _roleNameController = TextEditingController(text: widget.initialRole?.name ?? '');
     
-    // If edit mode and Super Admin, select all by default
-    final bool defaultVal = widget.isEdit && (widget.initialName == "Super Admin");
-    for (var group in _permissionGroups.values) {
-      for (var item in group) {
-        _selectedPermissions[item] = defaultVal;
+    if (widget.isEdit && widget.initialRole != null) {
+      for (var perm in widget.initialRole!.permissions) {
+        _selectedPermissions[perm.id] = true;
       }
     }
   }
@@ -52,6 +40,17 @@ class _RoleFormDialogState extends State<RoleFormDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(rolesProvider);
+    final allPermissions = state.permissions;
+    
+    // Group permissions by 'group'
+    final Map<String, List<PermissionModel>> groupedPermissions = {};
+    for (var perm in allPermissions) {
+      final g = perm.group.isNotEmpty ? perm.group : 'General';
+      groupedPermissions.putIfAbsent(g, () => []);
+      groupedPermissions[g]!.add(perm);
+    }
+
     final double screenWidth = MediaQuery.of(context).size.width;
     final double dialogWidth = screenWidth > 900 ? 800 : screenWidth * 0.9;
 
@@ -148,7 +147,6 @@ class _RoleFormDialogState extends State<RoleFormDialog> {
                       ),
                       const SizedBox(height: 20),
 
-                      // Permission Matrix Grid
                       LayoutBuilder(
                         builder: (context, constraints) {
                           int crossAxisCount = 3;
@@ -161,7 +159,7 @@ class _RoleFormDialogState extends State<RoleFormDialog> {
                           return Wrap(
                             spacing: 12,
                             runSpacing: 12,
-                            children: _permissionGroups.entries.map((entry) {
+                            children: groupedPermissions.entries.map((entry) {
                               final double cardWidth = (constraints.maxWidth - ((crossAxisCount - 1) * 12)) / crossAxisCount;
                               return SizedBox(
                                 width: cardWidth,
@@ -192,15 +190,37 @@ class _RoleFormDialogState extends State<RoleFormDialog> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            widget.isEdit ? "Role updated successfully" : "Role created successfully",
-                          ),
-                        ),
-                      );
+                    onPressed: _isLoading ? null : () async {
+                      if (_roleNameController.text.trim().isEmpty) {
+                        AppSnackBar.instance.error("Role name cannot be empty");
+                        return;
+                      }
+
+                      final selectedIds = _selectedPermissions.entries
+                          .where((e) => e.value)
+                          .map((e) => e.key)
+                          .toList();
+
+                      final data = {
+                        'name': _roleNameController.text.trim(),
+                        'permissions': selectedIds,
+                      };
+
+                      setState(() => _isLoading = true);
+                      bool success;
+                      if (widget.isEdit && widget.initialRole != null) {
+                        success = await ref.read(rolesProvider.notifier).updateRole(widget.initialRole!.id, data);
+                      } else {
+                        success = await ref.read(rolesProvider.notifier).createRole(data);
+                      }
+                      setState(() => _isLoading = false);
+
+                      if (success && context.mounted) {
+                        Navigator.pop(context);
+                        AppSnackBar.instance.success(
+                          widget.isEdit ? "Role updated successfully" : "Role created successfully",
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF10B981),
@@ -209,7 +229,9 @@ class _RoleFormDialogState extends State<RoleFormDialog> {
                       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     ),
-                    child: const Text("Save", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    child: _isLoading 
+                        ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                        : const Text("Save", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                   ),
                 ],
               ),
@@ -222,7 +244,7 @@ class _RoleFormDialogState extends State<RoleFormDialog> {
 
   Widget _buildPermissionGroupCard(
     String groupTitle,
-    List<String> permissions,
+    List<PermissionModel> permissions,
     bool isDark,
     Color cardBg,
     Color borderColor,
@@ -249,11 +271,11 @@ class _RoleFormDialogState extends State<RoleFormDialog> {
           const SizedBox(height: 8),
           Column(
             children: permissions.map((permission) {
-              final bool isChecked = _selectedPermissions[permission] ?? false;
+              final bool isChecked = _selectedPermissions[permission.id] ?? false;
               return InkWell(
                 onTap: () {
                   setState(() {
-                    _selectedPermissions[permission] = !isChecked;
+                    _selectedPermissions[permission.id] = !isChecked;
                   });
                 },
                 child: Padding(
@@ -271,7 +293,7 @@ class _RoleFormDialogState extends State<RoleFormDialog> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
                           onChanged: (bool? val) {
                             setState(() {
-                              _selectedPermissions[permission] = val ?? false;
+                              _selectedPermissions[permission.id] = val ?? false;
                             });
                           },
                         ),
@@ -279,7 +301,7 @@ class _RoleFormDialogState extends State<RoleFormDialog> {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          permission,
+                          permission.name,
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,

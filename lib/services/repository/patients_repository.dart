@@ -44,6 +44,21 @@ class PatientsRepository {
     return list;
   }
 
+  Future<PatientModel?> getPatientDetails(int id) async {
+    try {
+      dynamic response = await _apiServices.getServices('${_api.patients}/$id');
+      if (response == null || response['data'] == null) {
+        response = await _apiServices.getServices(_api.patientWithMedicines(id));
+      }
+      if (response != null && response['data'] is Map<String, dynamic>) {
+        return PatientModel.fromJson(response['data']);
+      }
+    } catch (e) {
+      errorLog('getPatientDetails error', e);
+    }
+    return null;
+  }
+
   Future<PatientModel?> getPatientWithMedicines(int id) async {
     try {
       final response = await _apiServices.getServices(_api.patientWithMedicines(id));

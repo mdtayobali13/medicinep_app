@@ -37,4 +37,12 @@ class PoliceUnitModel {
       if (index != null) 'index': index,
     };
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PoliceUnitModel && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

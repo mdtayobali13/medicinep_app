@@ -38,7 +38,7 @@ class AppApiUrl {
   String privacyPolicy = "/rule/privacy-policy";
   String termsAndConditions = "/rule/terms-and-conditions";
   String faq = "/faq";
-  String notification = "/notification";
+  String notification = "/get-alert-messages";
 
   // Dashboard
   String dashboard = "/dashboard";

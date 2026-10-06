@@ -10,6 +10,8 @@ class MedicineDateField extends StatefulWidget {
   final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
 
+  final DateTime? firstDate;
+
   const MedicineDateField({
     super.key,
     required this.label,
@@ -17,6 +19,7 @@ class MedicineDateField extends StatefulWidget {
     this.initialValue,
     this.controller,
     this.onChanged,
+    this.firstDate,
   });
 
   @override
@@ -38,10 +41,17 @@ class _MedicineDateFieldState extends State<MedicineDateField> {
 
   Future<void> _pickDate() async {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final now = DateTime.now();
+    final effectiveFirst = widget.firstDate ?? DateTime(1900);
+    DateTime initDate = now;
+    if (initDate.isBefore(effectiveFirst)) {
+      initDate = effectiveFirst;
+    }
+
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
+      initialDate: initDate,
+      firstDate: effectiveFirst,
       lastDate: DateTime(2100),
       initialEntryMode: DatePickerEntryMode.calendarOnly,
       builder: (context, child) {

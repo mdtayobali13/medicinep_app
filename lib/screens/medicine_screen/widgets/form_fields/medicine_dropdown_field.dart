@@ -28,9 +28,18 @@ class MedicineDropdownField<T> extends StatelessWidget {
     final borderColor = isDark ? Colors.white24 : Colors.grey.shade300;
     final fieldBg = isDark ? const Color(0xFF1E2226) : Colors.white;
     final dropdownBg = isDark ? const Color(0xFF262B30) : Colors.white;
+    final textColor = isDark ? Colors.white : Colors.black87;
 
-    // Filter valid value to prevent DropdownButton assertion if value isn't in items
-    final bool hasValidValue = value != null && items.any((element) => element.value == value);
+    final List<DropdownMenuItem<T>> uniqueItems = [];
+    final Set<T> seenValues = {};
+    for (final item in items) {
+      if (item.value != null && !seenValues.contains(item.value)) {
+        seenValues.add(item.value as T);
+        uniqueItems.add(item);
+      }
+    }
+
+    final bool hasValidValue = value != null && seenValues.contains(value);
     final T? selectedValue = hasValidValue ? value : null;
 
     return Column(
@@ -51,54 +60,68 @@ class MedicineDropdownField<T> extends StatelessWidget {
         ),
         SizedBox(
           height: 42,
-          child: DropdownButtonFormField2<T>(
-            isExpanded: true,
-            value: selectedValue,
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 0,
-                horizontal: 12,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
-                borderSide: BorderSide(color: borderColor),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
-                borderSide: BorderSide(color: borderColor),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
-                borderSide: const BorderSide(color: Colors.blue),
-              ),
-              fillColor: fieldBg,
-              filled: true,
-            ),
-            hint: isLoading
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : Text(
-                    hint.isNotEmpty ? hint : "Select $label",
-                    style: TextStyle(color: hintColor, fontSize: 13),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+          child: Theme(
+            data: Theme.of(context).copyWith(
+              canvasColor: dropdownBg,
+              textTheme: Theme.of(context).textTheme.copyWith(
+                    titleMedium: TextStyle(color: textColor, fontSize: 13),
+                    bodyMedium: TextStyle(color: textColor, fontSize: 13),
+                    bodyLarge: TextStyle(color: textColor, fontSize: 13),
                   ),
-            iconStyleData: IconStyleData(
-              icon: Icon(
-                CupertinoIcons.chevron_down,
-                color: hintColor,
-                size: 16,
-              ),
             ),
-            items: items,
-            onChanged: onChanged,
-            dropdownStyleData: DropdownStyleData(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: dropdownBg,
+            child: DropdownButtonFormField2<T>(
+              isExpanded: true,
+              value: selectedValue,
+              style: TextStyle(color: textColor, fontSize: 13),
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 0,
+                  horizontal: 12,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(6),
+                  borderSide: BorderSide(color: borderColor),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(6),
+                  borderSide: BorderSide(color: borderColor),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(6),
+                  borderSide: const BorderSide(color: Colors.blue),
+                ),
+                fillColor: fieldBg,
+                filled: true,
+              ),
+              hint: isLoading
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Text(
+                      hint.isNotEmpty ? hint : "Select $label",
+                      style: TextStyle(color: hintColor, fontSize: 13),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+              iconStyleData: IconStyleData(
+                icon: Icon(
+                  CupertinoIcons.chevron_down,
+                  color: hintColor,
+                  size: 16,
+                ),
+              ),
+              items: uniqueItems,
+              onChanged: onChanged,
+              dropdownStyleData: DropdownStyleData(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: dropdownBg,
+                ),
+              ),
+              menuItemStyleData: const MenuItemStyleData(
+                padding: EdgeInsets.symmetric(horizontal: 12),
               ),
             ),
           ),

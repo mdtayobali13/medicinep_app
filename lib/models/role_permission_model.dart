@@ -2,11 +2,15 @@ class PermissionModel {
   final int id;
   final String name;
   final String? guardName;
+  final String group;
+  final String slug;
 
   PermissionModel({
     required this.id,
     required this.name,
     this.guardName,
+    this.group = '',
+    this.slug = '',
   });
 
   factory PermissionModel.fromJson(Map<String, dynamic> json) {
@@ -14,6 +18,8 @@ class PermissionModel {
       id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '0') ?? 0,
       name: json['name']?.toString() ?? '',
       guardName: json['guard_name']?.toString(),
+      group: json['group']?.toString() ?? '',
+      slug: json['slug']?.toString() ?? '',
     );
   }
 }

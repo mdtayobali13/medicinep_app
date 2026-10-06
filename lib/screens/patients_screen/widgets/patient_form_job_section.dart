@@ -103,14 +103,14 @@ class PatientFormJobSection extends ConsumerWidget {
                 label: "Employee status",
                 hint: "Select status",
                 value: selectedStatus,
-                items: ['Active', 'Retired', 'Resigned']
+                items: ['Regular', 'Retired']
                     .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                     .toList(),
                 onChanged: onStatusChanged,
               ),
             ),
             const SizedBox(width: 16),
-            Expanded(child: MedicineDateField(label: "Joining date", hint: "Select date", initialValue: joiningDateController.text)),
+            Expanded(child: MedicineDateField(label: "Joining date", hint: "Select date", controller: joiningDateController)),
           ],
         ),
       ],
@@ -158,13 +158,13 @@ class PatientFormJobSection extends ConsumerWidget {
           label: "Employee status",
           hint: "Select status",
           value: selectedStatus,
-          items: ['Active', 'Retired', 'Resigned']
+          items: ['Regular', 'Retired']
               .map((e) => DropdownMenuItem(value: e, child: Text(e)))
               .toList(),
           onChanged: onStatusChanged,
         ),
         const SizedBox(height: 16),
-        MedicineDateField(label: "Joining date", hint: "Select date", initialValue: joiningDateController.text),
+        MedicineDateField(label: "Joining date", hint: "Select date", controller: joiningDateController),
       ],
     );
   }

@@ -99,7 +99,7 @@ class _MedicineFormDialogState extends ConsumerState<MedicineFormDialog> {
       'expiration_reminder_day': expDays,
       'expiration_reminder_days': expDays,
       'origin': _originController.text.trim().isNotEmpty ? _originController.text.trim() : 'Local',
-      'status': _selectedStatus.toLowerCase(),
+      'status': _selectedStatus,
     };
 
     bool success = false;
@@ -108,7 +108,6 @@ class _MedicineFormDialogState extends ConsumerState<MedicineFormDialog> {
     } else {
       success = await ref.read(medicinesProvider.notifier).createMedicine(data);
     }
-
     if (mounted) {
       setState(() => _isSaving = false);
       if (success) {

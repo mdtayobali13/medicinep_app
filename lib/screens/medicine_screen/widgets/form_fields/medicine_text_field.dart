@@ -56,7 +56,7 @@ class MedicineTextField extends StatelessWidget {
           height: 42, // Force strict height to match dropdown
           child: TextFormField(
             controller: controller,
-            initialValue: initialValue,
+            initialValue: controller != null ? null : initialValue,
             enabled: enabled,
             readOnly: readOnly,
             onTap: onTap,

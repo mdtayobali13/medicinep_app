@@ -180,7 +180,7 @@ class PatientListCard extends StatelessWidget {
         if (value == 'view') {
           showDialog(
             context: context,
-            builder: (context) => const PatientViewDialog(),
+            builder: (context) => PatientViewDialog(item: item ?? PatientModel(id: item?.id ?? 0, name: name)),
           );
         } else if (value == 'edit') {
           showDialog(
@@ -191,10 +191,32 @@ class PatientListCard extends StatelessWidget {
               initialData: {
                 'name': name,
                 'designation': designation,
-                'bp_number': bpNumber,
+                'bp_number': bpNumber == 'N/A' ? '' : bpNumber,
                 'police_unit': policeUnit,
                 'status': status,
-                'phone': phone,
+                'phone': phone == 'N/A' ? '' : phone,
+                if (item?.father != null) 'father': item!.father!,
+                if (item?.mother != null) 'mother': item!.mother!,
+                if (item?.nid != null) 'nid': item!.nid!,
+                if (item?.dob != null) 'dob': item!.dob!,
+                if (item?.gender != null) 'gender': item!.gender!,
+                if (item?.maritalStatus != null) 'marital': item!.maritalStatus!,
+                if (item?.bloodGroup != null) 'blood_group': item!.bloodGroup!,
+                if (item?.height != null) 'height': item!.height!,
+                if (item?.weight != null) 'weight': item!.weight!,
+                if (item?.eyesight != null) 'eyesight': item!.eyesight!,
+                if (item?.workPlace != null) 'work_place': item!.workPlace!,
+                if (item?.joiningDate != null) 'joining_date': item!.joiningDate!,
+                if (item?.presentVillage != null) 'present_village': item!.presentVillage!,
+                if (item?.presentDivision != null) 'present_division': item!.presentDivision!,
+                if (item?.presentDistrict != null) 'present_district': item!.presentDistrict!,
+                if (item?.presentUpazila != null) 'present_upazila': item!.presentUpazila!,
+                if (item?.presentUnion != null) 'present_union': item!.presentUnion!,
+                if (item?.permanentVillage != null) 'permanent_village': item!.permanentVillage!,
+                if (item?.permanentDivision != null) 'permanent_division': item!.permanentDivision!,
+                if (item?.permanentDistrict != null) 'permanent_district': item!.permanentDistrict!,
+                if (item?.permanentUpazila != null) 'permanent_upazila': item!.permanentUpazila!,
+                if (item?.permanentUnion != null) 'permanent_union': item!.permanentUnion!,
               },
             ),
           );

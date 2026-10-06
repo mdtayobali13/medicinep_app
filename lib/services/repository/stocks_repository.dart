@@ -1,6 +1,7 @@
 import 'package:medicine_system/constant/app_api_url.dart';
 import 'package:medicine_system/models/paginated_response.dart';
 import 'package:medicine_system/models/stock_model.dart';
+import 'package:medicine_system/models/stock_report_model.dart';
 import 'package:medicine_system/services/api/api_services.dart';
 import 'package:medicine_system/utils/app_log.dart';
 
@@ -31,18 +32,20 @@ class StocksRepository {
     return null;
   }
 
-  Future<PaginatedResponse<StockModel>?> getStockReports({int page = 1, int perPage = 10, String searchText = ''}) async {
+  Future<PaginatedResponse<StockReportModel>?> getStockReports({int page = 1, int perPage = 10, String searchText = '', String? startDate, String? endDate}) async {
     try {
-      final response = await _apiServices.getServices(
-        _api.stockReports,
-        queryParameters: {
+      final response = await _apiServices.postServices(
+        url: _api.stockReports,
+        body: {
           'page': page,
           'per_page': perPage,
           if (searchText.isNotEmpty) 'searchText': searchText,
+          if (startDate != null && startDate.isNotEmpty) 'start_date': startDate,
+          if (endDate != null && endDate.isNotEmpty) 'end_date': endDate,
         },
       );
       if (response != null) {
-        return PaginatedResponse.fromJson(response, StockModel.fromJson);
+        return PaginatedResponse.fromJson(response, StockReportModel.fromJson);
       }
     } catch (e) {
       errorLog('getStockReports error', e);

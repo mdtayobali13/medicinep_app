@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:medicine_system/models/medicine_model.dart';
+import 'package:medicine_system/providers/stocks_provider.dart';
 
-class DistributionMedicineRow extends StatelessWidget {
+class DistributionMedicineRow extends ConsumerWidget {
   final bool showLabels;
   final List<MedicineModel> medicineList;
   final MedicineModel? selectedMedicine;
@@ -25,7 +27,7 @@ class DistributionMedicineRow extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDark ? Colors.white : Colors.black87;
     final hintColor = isDark ? Colors.white38 : Colors.grey.shade400;
@@ -34,7 +36,7 @@ class DistributionMedicineRow extends StatelessWidget {
     final disabledBg = isDark ? const Color(0xFF262B30) : Colors.grey.shade100;
     final dropdownBg = isDark ? const Color(0xFF262B30) : Colors.white;
 
-    final int currentStock = selectedMedicine?.currentStock ?? selectedMedicine?.alertQuantity ?? 0;
+    int currentStock = selectedMedicine?.currentStock ?? 0;
 
     return LayoutBuilder(
       builder: (context, constraints) {

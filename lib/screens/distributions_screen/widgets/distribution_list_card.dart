@@ -10,6 +10,7 @@ class DistributionListCard extends StatelessWidget {
   final String prescriptionNumber;
   final String date;
   final String distributionBy;
+  final VoidCallback? onDelete;
 
   const DistributionListCard({
     super.key,
@@ -20,6 +21,7 @@ class DistributionListCard extends StatelessWidget {
     required this.prescriptionNumber,
     required this.date,
     required this.distributionBy,
+    this.onDelete,
   });
 
   @override
@@ -113,11 +115,15 @@ class DistributionListCard extends StatelessWidget {
         } else if (value == 'delete') {
           showDialog(
             context: context,
-            builder: (context) => DeleteConfirmationDialog(
+            builder: (dialogContext) => DeleteConfirmationDialog(
               onConfirm: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Data deleted successfully")),
-                );
+                if (onDelete != null) {
+                  onDelete!();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Data deleted successfully")),
+                  );
+                }
               },
             ),
           );

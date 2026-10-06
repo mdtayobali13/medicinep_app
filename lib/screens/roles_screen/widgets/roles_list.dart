@@ -1,38 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:medicine_system/providers/roles_provider.dart';
+import 'package:medicine_system/models/role_permission_model.dart';
 import 'package:medicine_system/screens/roles_screen/widgets/role_form_dialog.dart';
 import 'package:medicine_system/screens/designations_screen/widgets/delete_confirmation_dialog.dart';
 
-class RolesList extends StatelessWidget {
+class RolesList extends ConsumerWidget {
   const RolesList({super.key});
 
-  static final Map<String, List<String>> _superAdminPermissions = {
-    'Dashboard': ['View Dashboard'],
-    'User Management': ['Create User', 'Edit User', 'Delete User', 'View User'],
-    'Role': ['Create Role', 'Edit Role', 'Delete Role', 'View Role', 'Assign Role'],
-    'Permission': ['View Permission'],
-    'Category': ['Create Category', 'Edit Category', 'Delete Category', 'View Category'],
-    'Designation': ['Create Designation', 'Edit Designation', 'Delete Designation', 'View Designation'],
-    'Distribution': ['Create Distribution', 'Edit Distribution', 'Delete Distribution', 'View Distribution'],
-    'Medicine': ['Create Medicine', 'Edit Medicine', 'Delete Medicine', 'View Medicine', 'Assign Medicine'],
-    'Medicine Unit': ['Create Medicine Unit', 'Edit Medicine Unit', 'Delete Medicine Unit', 'View Medicine Unit'],
-    'Patient': ['Create Patient', 'Edit Patient', 'Delete Patient', 'View Patient', 'Assign Patient'],
-    'Police Unit': ['Create Police Unit', 'Edit Police Unit', 'Delete Police Unit', 'View Police Unit'],
-    'Stock': ['Create Stock', 'Edit Stock', 'Delete Stock', 'View Stock'],
-    'Website Setting': ['View Website Setting'],
-  };
-
-  static final Map<String, List<String>> _distributorPermissions = {
-    'Dashboard': ['View Dashboard'],
-    'Distribution': ['Create Distribution', 'Edit Distribution', 'View Distribution'],
-    'Medicine': ['View Medicine'],
-    'Stock': ['View Stock'],
-  };
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(rolesProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark ? const Color(0xFF1E2226) : Colors.white;
+
+    if (state.isLoading && state.roles.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 32),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (state.roles.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 32),
+        child: Center(
+          child: Text(
+            state.error ?? "No roles found",
+            style: TextStyle(color: Colors.grey.shade500, fontSize: 13),
+          ),
+        ),
+      );
+    }
 
     return Container(
       decoration: BoxDecoration(
@@ -48,32 +48,43 @@ class RolesList extends StatelessWidget {
         border: Border.all(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200),
       ),
       child: Column(
-        children: [
-          RoleExpandableItem(
-            roleName: "Super Admin",
-            permissions: _superAdminPermissions,
-            initialExpanded: true,
-          ),
-          Divider(height: 1, color: isDark ? Colors.grey.shade800 : const Color(0xFFEEEEEE)),
-          RoleExpandableItem(
-            roleName: "Distributor",
-            permissions: _distributorPermissions,
-            initialExpanded: false,
-          ),
-        ],
+        children: state.roles.asMap().entries.map((entry) {
+          final index = entry.key;
+          final role = entry.value;
+
+          // Group permissions by 'group'
+          final Map<String, List<String>> groupedPermissions = {};
+          for (var perm in role.permissions) {
+            final g = perm.group.isNotEmpty ? perm.group : 'General';
+            groupedPermissions.putIfAbsent(g, () => []);
+            groupedPermissions[g]!.add(perm.name);
+          }
+
+          return Column(
+            children: [
+              RoleExpandableItem(
+                roleModel: role,
+                permissions: groupedPermissions,
+                initialExpanded: index == 0,
+              ),
+              if (index < state.roles.length - 1)
+                Divider(height: 1, color: isDark ? Colors.grey.shade800 : const Color(0xFFEEEEEE)),
+            ],
+          );
+        }).toList(),
       ),
     );
   }
 }
 
 class RoleExpandableItem extends StatefulWidget {
-  final String roleName;
+  final RoleModel roleModel;
   final Map<String, List<String>> permissions;
   final bool initialExpanded;
 
   const RoleExpandableItem({
     super.key,
-    required this.roleName,
+    required this.roleModel,
     required this.permissions,
     this.initialExpanded = false,
   });
@@ -122,7 +133,7 @@ class _RoleExpandableItemState extends State<RoleExpandableItem> {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          widget.roleName,
+                          widget.roleModel.name,
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
@@ -213,44 +224,51 @@ class _RoleExpandableItemState extends State<RoleExpandableItem> {
   }
 
   Widget _buildActionButtons(bool isDark) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _buildActionBtn(
-          icon: CupertinoIcons.pencil,
-          color: isDark ? Colors.white : Colors.black87,
-          borderColor: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
-          backgroundColor: isDark ? const Color(0xFF262B30) : Colors.white,
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) => RoleFormDialog(
-                isEdit: true,
-                initialName: widget.roleName,
-              ),
-            );
-          },
-        ),
-        const SizedBox(width: 8),
-        _buildActionBtn(
-          icon: CupertinoIcons.trash,
-          color: Colors.red.shade400,
-          borderColor: isDark ? Colors.red.shade900 : Colors.red.shade200,
-          backgroundColor: isDark ? const Color(0xFF262B30) : Colors.white,
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) => DeleteConfirmationDialog(
-                onConfirm: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Role deleted successfully")),
-                  );
-                },
-              ),
-            );
-          },
-        ),
-      ],
+    return Consumer(
+      builder: (context, ref, child) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildActionBtn(
+              icon: CupertinoIcons.pencil,
+              color: isDark ? Colors.white : Colors.black87,
+              borderColor: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+              backgroundColor: isDark ? const Color(0xFF262B30) : Colors.white,
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => RoleFormDialog(
+                    isEdit: true,
+                    initialRole: widget.roleModel,
+                  ),
+                );
+              },
+            ),
+            const SizedBox(width: 8),
+            _buildActionBtn(
+              icon: CupertinoIcons.trash,
+              color: Colors.red.shade400,
+              borderColor: isDark ? Colors.red.shade900 : Colors.red.shade200,
+              backgroundColor: isDark ? const Color(0xFF262B30) : Colors.white,
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => DeleteConfirmationDialog(
+                    onConfirm: () async {
+                      final success = await ref.read(rolesProvider.notifier).deleteRole(widget.roleModel.id);
+                      if (success && context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Role deleted successfully")),
+                        );
+                      }
+                    },
+                  ),
+                );
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

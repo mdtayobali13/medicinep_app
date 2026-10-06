@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:medicine_system/providers/admin_users_provider.dart';
 
-class UsersTopBar extends StatefulWidget {
+class UsersTopBar extends ConsumerStatefulWidget {
   const UsersTopBar({super.key});
 
   @override
-  State<UsersTopBar> createState() => _UsersTopBarState();
+  ConsumerState<UsersTopBar> createState() => _UsersTopBarState();
 }
 
-class _UsersTopBarState extends State<UsersTopBar> {
+class _UsersTopBarState extends ConsumerState<UsersTopBar> {
   late final ValueNotifier<String?> _itemsPerPageNotifier;
 
   @override
@@ -80,6 +82,7 @@ class _UsersTopBarState extends State<UsersTopBar> {
               onChanged: (String? newValue) {
                 if (newValue != null) {
                   _itemsPerPageNotifier.value = newValue;
+                  ref.read(adminUsersProvider.notifier).setPerPage(int.tryParse(newValue) ?? 10);
                 }
               },
               items: <String>['10', '20', '50', '100']
@@ -111,6 +114,9 @@ class _UsersTopBarState extends State<UsersTopBar> {
       ),
       child: TextField(
         style: TextStyle(color: textColor, fontSize: 13),
+        onChanged: (val) {
+          ref.read(adminUsersProvider.notifier).setSearchQuery(val);
+        },
         decoration: InputDecoration(
           hintText: "Search...",
           hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.grey.shade400, fontSize: 13),

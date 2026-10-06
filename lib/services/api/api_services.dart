@@ -28,9 +28,16 @@ class ApiServices {
       final data = e.response?.data;
       if (data is Map) {
         if (data['errors'] is Map && (data['errors'] as Map).isNotEmpty) {
-          final firstErrList = (data['errors'] as Map).values.first;
-          if (firstErrList is List && firstErrList.isNotEmpty) {
-            AppSnackBar.instance.error(firstErrList.first.toString());
+          final List<String> allMessages = [];
+          for (final value in (data['errors'] as Map).values) {
+            if (value is List) {
+              allMessages.addAll(value.map((e) => e.toString()));
+            } else if (value != null) {
+              allMessages.add(value.toString());
+            }
+          }
+          if (allMessages.isNotEmpty) {
+            AppSnackBar.instance.error(allMessages.join('\n'));
             return;
           }
         }
@@ -45,23 +52,48 @@ class ApiServices {
       errorLog('api dio exception', e);
     }
   }
+
   dynamic _processResponse(dynamic data) {
     if (data == null) return null;
     if (data is String) {
       final trimmed = data.trim();
-      if (trimmed.startsWith('<') || trimmed.contains('<html') || trimmed.contains('<!doctype')) {
+      if (trimmed.startsWith('<') ||
+          trimmed.contains('<html') ||
+          trimmed.contains('<!doctype')) {
         errorLog('api_services', 'Server returned HTML instead of JSON');
+        return null;
+      }
+    } else if (data is Map) {
+      final isStatusFalse = data['status'] == false || data['status'] == 'false' || data['status'] == 0;
+      final isSuccessFalse = data['success'] == false || data['success'] == 'false' || data['success'] == 0;
+      if (isStatusFalse || isSuccessFalse) {
+        final msg = data['message'] ?? data['error'] ?? 'API returned failure status';
+        AppSnackBar.instance.error(msg.toString());
         return null;
       }
     }
     return data;
   }
 
-  Future<dynamic> putServices({required String url, dynamic body, int statusCode = 200, Map<String, dynamic>? query, Options? options}) async {
+  Future<dynamic> putServices({
+    required String url,
+    dynamic body,
+    int statusCodeStart = 200,
+    int statusCodeEnd = 299,
+    Map<String, dynamic>? query,
+    Options? options,
+  }) async {
     try {
-      final response = await api.sendRequest.put(url, data: body, queryParameters: query, options: options);
-      if (response.statusCode == statusCode) {
-        return _processResponse(response.data);
+      final response = await api.sendRequest.put(
+        url,
+        data: body,
+        queryParameters: query,
+        options: options,
+      );
+      if (response.statusCode != null &&
+          response.statusCode! >= statusCodeStart &&
+          response.statusCode! <= statusCodeEnd) {
+        return _processResponse(response.data) ?? true;
       } else {
         return null;
       }
@@ -90,9 +122,16 @@ class ApiServices {
     Options? options,
   }) async {
     try {
-      final dynamic response = await AppApi().sendRequest.post(url, data: body, options: options, queryParameters: query);
-      if (response.statusCode != null && response.statusCode! >= statusCodeStart && response.statusCode! <= statusCodeEnd) {
-        return _processResponse(response.data);
+      final dynamic response = await AppApi().sendRequest.post(
+        url,
+        data: body,
+        options: options,
+        queryParameters: query,
+      );
+      if (response.statusCode != null &&
+          response.statusCode! >= statusCodeStart &&
+          response.statusCode! <= statusCodeEnd) {
+        return _processResponse(response.data) ?? true;
       } else {
         return null;
       }
@@ -112,9 +151,20 @@ class ApiServices {
     }
   }
 
-  Future<dynamic> getServices(String url, {int statusCode = 200, Map<String, dynamic>? queryParameters, dynamic body, Options? options}) async {
+  Future<dynamic> getServices(
+    String url, {
+    int statusCode = 200,
+    Map<String, dynamic>? queryParameters,
+    dynamic body,
+    Options? options,
+  }) async {
     try {
-      final response = await api.sendRequest.get(url, queryParameters: queryParameters, data: body, options: options);
+      final response = await api.sendRequest.get(
+        url,
+        queryParameters: queryParameters,
+        data: body,
+        options: options,
+      );
       if (response.statusCode == statusCode) {
         return _processResponse(response.data);
       } else {
@@ -136,14 +186,30 @@ class ApiServices {
     }
   }
 
-  Future<dynamic> patchServices({required String url, Object? body, int statusCode = 200, Map<String, dynamic>? query, Options? options}) async {
+  Future<dynamic> patchServices({
+    required String url,
+    Object? body,
+    int statusCodeStart = 200,
+    int statusCodeEnd = 299,
+    Map<String, dynamic>? query,
+    Options? options,
+  }) async {
     try {
-      final response = await api.sendRequest.patch(url, data: body, queryParameters: query, options: options);
+      final response = await api.sendRequest.patch(
+        url,
+        data: body,
+        queryParameters: query,
+        options: options,
+      );
 
-      if (response.statusCode == statusCode) {
-        return _processResponse(response.data);
+      if (response.statusCode != null &&
+          response.statusCode! >= statusCodeStart &&
+          response.statusCode! <= statusCodeEnd) {
+        return _processResponse(response.data) ?? true;
       } else {
-        AppSnackBar.instance.error("Unexpected response: ${response.statusCode} ${response.statusMessage}");
+        AppSnackBar.instance.error(
+          "Unexpected response: ${response.statusCode} ${response.statusMessage}",
+        );
         return null;
       }
     } on SocketException catch (e) {
@@ -162,14 +228,30 @@ class ApiServices {
     }
   }
 
-  Future<dynamic> deleteServices({required String url, Object? body, int statusCode = 200, Map<String, dynamic>? query, Options? options}) async {
+  Future<dynamic> deleteServices({
+    required String url,
+    Object? body,
+    int statusCodeStart = 200,
+    int statusCodeEnd = 299,
+    Map<String, dynamic>? query,
+    Options? options,
+  }) async {
     try {
-      final response = await api.sendRequest.delete(url, data: body, queryParameters: query, options: options);
+      final response = await api.sendRequest.delete(
+        url,
+        data: body,
+        queryParameters: query,
+        options: options,
+      );
 
-      if (response.statusCode == statusCode) {
-        return _processResponse(response.data);
+      if (response.statusCode != null &&
+          response.statusCode! >= statusCodeStart &&
+          response.statusCode! <= statusCodeEnd) {
+        return _processResponse(response.data) ?? true;
       } else {
-        AppSnackBar.instance.error("Unexpected response: ${response.statusCode} ${response.statusMessage}");
+        AppSnackBar.instance.error(
+          "Unexpected response: ${response.statusCode} ${response.statusMessage}",
+        );
         return null;
       }
     } on SocketException catch (e) {

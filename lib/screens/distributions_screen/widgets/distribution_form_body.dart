@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicine_system/models/patient_model.dart';
 import 'package:medicine_system/providers/distributions_provider.dart';
+import 'package:medicine_system/providers/stocks_provider.dart';
 import 'package:medicine_system/screens/distributions_screen/widgets/distribution_form_patient_section.dart';
 import 'package:medicine_system/screens/distributions_screen/widgets/distribution_form_medicine_section.dart';
 
@@ -47,6 +48,22 @@ class _DistributionFormBodyState extends ConsumerState<DistributionFormBody> {
       return;
     }
 
+    for (final item in validItems) {
+      int availableStock = item.medicine!.currentStock ?? 0;
+
+      if (item.quantity > availableStock) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Quantity (${item.quantity}) for "${item.medicine!.brandName}" exceeds available stock ($availableStock).',
+            ),
+            backgroundColor: Colors.red.shade700,
+          ),
+        );
+        return;
+      }
+    }
+
     setState(() => _isSaving = true);
 
     final List<Map<String, dynamic>> itemsPayload = validItems
@@ -58,7 +75,13 @@ class _DistributionFormBodyState extends ConsumerState<DistributionFormBody> {
 
     final Map<String, dynamic> data = {
       'patient_id': _selectedPatient!.id,
+      'patient_name': _selectedPatient!.name,
+      'patient': _selectedPatient!.name,
+      'name': _selectedPatient!.name,
+      if (_selectedPatient!.bpNo != null) 'bp_no': _selectedPatient!.bpNo,
+      if (_selectedPatient!.bpNo != null) 'bp_number': _selectedPatient!.bpNo,
       'distribution_date': DateTime.now().toIso8601String().split('T').first,
+      'date': DateTime.now().toIso8601String().split('T').first,
       'receiver_type': _selectedReceiver ?? 'Self',
       'prescription_code': _prescriptionController.text.trim(),
       'notes': _notesController.text.trim(),

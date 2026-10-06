@@ -33,4 +33,12 @@ class DesignationModel {
       if (index != null) 'index': index,
     };
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DesignationModel && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

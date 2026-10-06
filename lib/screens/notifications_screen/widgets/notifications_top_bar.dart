@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:medicine_system/providers/notifications_provider.dart';
+import 'package:medicine_system/utils/app_theme.dart';
 
-class NotificationsTopBar extends StatefulWidget {
+class NotificationsTopBar extends ConsumerStatefulWidget {
   const NotificationsTopBar({super.key});
 
   @override
-  State<NotificationsTopBar> createState() => _NotificationsTopBarState();
+  ConsumerState<NotificationsTopBar> createState() => _NotificationsTopBarState();
 }
 
-class _NotificationsTopBarState extends State<NotificationsTopBar> {
+class _NotificationsTopBarState extends ConsumerState<NotificationsTopBar> {
   late final ValueNotifier<String?> _itemsPerPageNotifier;
 
   @override
@@ -26,26 +29,29 @@ class _NotificationsTopBarState extends State<NotificationsTopBar> {
 
   @override
   Widget build(BuildContext context) {
+    final themeMode = ref.watch(themeProvider);
+    final isDark = themeMode == ThemeMode.dark;
+
     return Wrap(
       alignment: WrapAlignment.spaceBetween,
       crossAxisAlignment: WrapCrossAlignment.center,
       spacing: 16,
       runSpacing: 16,
       children: [
-        _buildItemsPerPage(),
-        _buildSearchBox(),
+        _buildItemsPerPage(isDark),
+        _buildSearchBox(isDark),
       ],
     );
   }
 
-  Widget _buildItemsPerPage() {
+  Widget _buildItemsPerPage(bool isDark) {
     return Container(
       height: 38,
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: isDark ? Colors.grey.shade700 : Colors.grey.shade300),
         borderRadius: BorderRadius.circular(6),
-        color: Colors.white,
+        color: isDark ? const Color(0xFF1F1F1F) : Colors.white,
       ),
       child: ValueListenableBuilder<String?>(
         valueListenable: _itemsPerPageNotifier,
@@ -66,15 +72,16 @@ class _NotificationsTopBarState extends State<NotificationsTopBar> {
               ),
               dropdownStyleData: DropdownStyleData(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDark ? const Color(0xFF1F1F1F) : Colors.white,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 elevation: 4,
               ),
-              style: const TextStyle(color: Colors.black87, fontSize: 14, fontWeight: FontWeight.w500),
+              style: TextStyle(color: isDark ? Colors.white : Colors.black87, fontSize: 14, fontWeight: FontWeight.w500),
               onChanged: (String? newValue) {
                 if (newValue != null) {
                   _itemsPerPageNotifier.value = newValue;
+                  ref.read(notificationsProvider.notifier).updateItemsPerPage(int.parse(newValue));
                 }
               },
               items: <String>['10', '20', '50', '100']
@@ -91,18 +98,21 @@ class _NotificationsTopBarState extends State<NotificationsTopBar> {
     );
   }
 
-  Widget _buildSearchBox() {
+  Widget _buildSearchBox(bool isDark) {
     return Container(
       width: 250,
       height: 38,
       padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey.shade300),
+        color: isDark ? const Color(0xFF1F1F1F) : Colors.white,
+        border: Border.all(color: isDark ? Colors.grey.shade700 : Colors.grey.shade300),
         borderRadius: BorderRadius.circular(6),
       ),
       child: TextField(
-        style: const TextStyle(color: Colors.black87, fontSize: 13),
+        style: TextStyle(color: isDark ? Colors.white : Colors.black87, fontSize: 13),
+        onChanged: (value) {
+          ref.read(notificationsProvider.notifier).updateSearchQuery(value);
+        },
         decoration: InputDecoration(
           hintText: "Search...",
           hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),

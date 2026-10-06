@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:medicine_system/providers/stock_reports_provider.dart';
 import 'package:medicine_system/screens/stock_reports_screen/widgets/stock_reports_top_bar.dart';
 
-class StockReportsTable extends StatelessWidget {
+class StockReportsTable extends ConsumerWidget {
   const StockReportsTable({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(stockReportsProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark ? const Color(0xFF1E2226) : Colors.white;
     final headerBg = isDark ? const Color(0xFF262B30) : Colors.grey.shade200;
@@ -20,8 +23,23 @@ class StockReportsTable extends StatelessWidget {
           children: [
             const StockReportsTopBar(),
             const SizedBox(height: 16),
-            if (isSmallScreen) ...[
-              _buildMobileCards(context, isDark, cardBg, textColor),
+            if (state.isLoading && state.list.isEmpty)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 32),
+                child: Center(child: CircularProgressIndicator()),
+              )
+            else if (state.list.isEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 32),
+                child: Center(
+                  child: Text(
+                    state.error ?? "No stock records found",
+                    style: TextStyle(color: Colors.grey.shade500, fontSize: 13),
+                  ),
+                ),
+              )
+            else if (isSmallScreen) ...[
+              _buildMobileCards(context, isDark, cardBg, textColor, state.list),
             ] else ...[
               Container(
                 decoration: BoxDecoration(
@@ -55,13 +73,23 @@ class StockReportsTable extends StatelessWidget {
                           DataColumn(label: Text('Total Distribution', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: textColor))),
                           DataColumn(label: Text('Remaining', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: textColor))),
                         ],
-                        rows: [
-                          _buildRow('1', 'Admin', '0', '0', '2001', '0', '0', '0', '2001', isDark: isDark, isHighlightTotal: true),
-                          _buildRow('2', 'Raymond Hawkins', '0', '0', '50', '0', '0', '25', '25', isDark: isDark),
-                          _buildRow('3', 'Maris Galloway', '0', '0', '40', '0', '0', '5', '35', isDark: isDark),
-                          _buildRow('4', 'Paracetamol', '0', '0', '0', '0', '0', '0', '0', isDark: isDark),
-                          _buildRow('5', 'Apurbo Ray', '0', '0', '0', '0', '0', '0', '0', isDark: isDark),
-                        ],
+                        rows: state.list.asMap().entries.map((entry) {
+                          final index = entry.key + 1;
+                          final item = entry.value;
+                          return _buildRow(
+                            index.toString(),
+                            item.medicineName,
+                            item.previousStock.toString(),
+                            item.stockBetween.toString(),
+                            item.totalStock.toString(),
+                            item.previousDistribution.toString(),
+                            item.distributionBetween.toString(),
+                            item.totalDistribution.toString(),
+                            item.remainingCalculated.toString(),
+                            isDark: isDark,
+                            isHighlightTotal: item.remainingCalculated <= 0,
+                          );
+                        }).toList(),
                       ),
                     ),
                   ],
@@ -74,17 +102,11 @@ class StockReportsTable extends StatelessWidget {
     );
   }
 
-  Widget _buildMobileCards(BuildContext context, bool isDark, Color cardBg, Color textColor) {
-    final List<Map<String, String>> data = [
-      {'sl': '1', 'medicine': 'Admin', 'prevStock': '0', 'stockBetween': '0', 'totalStock': '2001', 'prevDist': '0', 'distBetween': '0', 'totalDist': '0', 'remaining': '2001'},
-      {'sl': '2', 'medicine': 'Raymond Hawkins', 'prevStock': '0', 'stockBetween': '0', 'totalStock': '50', 'prevDist': '0', 'distBetween': '0', 'totalDist': '25', 'remaining': '25'},
-      {'sl': '3', 'medicine': 'Maris Galloway', 'prevStock': '0', 'stockBetween': '0', 'totalStock': '40', 'prevDist': '0', 'distBetween': '0', 'totalDist': '5', 'remaining': '35'},
-      {'sl': '4', 'medicine': 'Paracetamol', 'prevStock': '0', 'stockBetween': '0', 'totalStock': '0', 'prevDist': '0', 'distBetween': '0', 'totalDist': '0', 'remaining': '0'},
-      {'sl': '5', 'medicine': 'Apurbo Ray', 'prevStock': '0', 'stockBetween': '0', 'totalStock': '0', 'prevDist': '0', 'distBetween': '0', 'totalDist': '0', 'remaining': '0'},
-    ];
-
+  Widget _buildMobileCards(BuildContext context, bool isDark, Color cardBg, Color textColor, List<dynamic> list) {
     return Column(
-      children: data.map((item) {
+      children: list.asMap().entries.map((entry) {
+        final index = entry.key + 1;
+        final item = entry.value;
         return Container(
           margin: const EdgeInsets.only(bottom: 8),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -108,7 +130,7 @@ class StockReportsTable extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      "#${item['sl']} ${item['medicine']}",
+                      "#$index ${item.medicineName}",
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: textColor),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -122,7 +144,7 @@ class StockReportsTable extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
-                      "Remaining: ${item['remaining']}",
+                      "Remaining: ${item.remainingCalculated}",
                       style: TextStyle(color: isDark ? Colors.lightBlueAccent : Colors.blue.shade700, fontWeight: FontWeight.bold, fontSize: 11),
                     ),
                   ),
@@ -132,9 +154,9 @@ class StockReportsTable extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildCardItem("Prev Stock", item['prevStock']!, isDark, textColor),
-                  _buildCardItem("Total Stock", item['totalStock']!, isDark, textColor),
-                  _buildCardItem("Total Dist", item['totalDist']!, isDark, textColor),
+                  _buildCardItem("Prev Stock", item.previousStock.toString(), isDark, textColor),
+                  _buildCardItem("Total Stock", item.totalStock.toString(), isDark, textColor),
+                  _buildCardItem("Total Dist", item.totalDistribution.toString(), isDark, textColor),
                 ],
               ),
             ],

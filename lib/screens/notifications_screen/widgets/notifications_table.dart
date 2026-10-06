@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:medicine_system/providers/notifications_provider.dart';
+import 'package:medicine_system/models/notification_model.dart';
 import 'package:medicine_system/screens/notifications_screen/widgets/notifications_top_bar.dart';
+import 'package:medicine_system/utils/app_theme.dart';
 
-class NotificationsTable extends StatelessWidget {
+class NotificationsTable extends ConsumerWidget {
   const NotificationsTable({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(notificationsProvider);
+    final themeMode = ref.watch(themeProvider);
+    final isDark = themeMode == ThemeMode.dark;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final bool isSmallScreen = constraints.maxWidth < 800;
@@ -15,12 +23,21 @@ class NotificationsTable extends StatelessWidget {
           children: [
             const NotificationsTopBar(),
             const SizedBox(height: 16),
-            if (isSmallScreen) ...[
-              _buildMobileCards(),
+            if (state.isLoading && state.notifications.isEmpty)
+              const Center(child: CircularProgressIndicator())
+            else if (state.notifications.isEmpty)
+              Center(
+                child: Text(
+                  state.error ?? "No notifications found",
+                  style: TextStyle(color: Colors.grey.shade500, fontSize: 13),
+                ),
+              )
+            else if (isSmallScreen) ...[
+              _buildMobileCards(state.notifications, isDark),
             ] else ...[
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDark ? const Color(0xFF1F1F1F) : Colors.white,
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
@@ -44,10 +61,12 @@ class NotificationsTable extends StatelessWidget {
                         DataColumn(label: Text('Message', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13))),
                         DataColumn(label: Text('Date', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13))),
                       ],
-                      rows: [
-                        _buildRow('1', "Medicine 'Maris Galloway' is almost sold out with a remaining quantity of 5.", '07-03-2024 08:51 AM'),
-                        _buildRow('2', "Medicine 'Maris Galloway' is almost sold out with a remaining quantity of 5.", '07-03-2024 08:51 AM'),
-                      ],
+                      rows: state.notifications.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final notif = entry.value;
+                        final sl = (index + 1).toString();
+                        return _buildRow(sl, notif.message, notif.date);
+                      }).toList(),
                     ),
                   ),
                 ),
@@ -59,36 +78,27 @@ class NotificationsTable extends StatelessWidget {
     );
   }
 
-  Widget _buildMobileCards() {
-    final List<Map<String, String>> notifications = [
-      {
-        'sl': '1',
-        'message': "Medicine 'Maris Galloway' is almost sold out with a remaining quantity of 5.",
-        'date': '07-03-2024 08:51 AM',
-      },
-      {
-        'sl': '2',
-        'message': "Medicine 'Maris Galloway' is almost sold out with a remaining quantity of 5.",
-        'date': '07-03-2024 08:51 AM',
-      },
-    ];
-
+  Widget _buildMobileCards(List<NotificationModel> notifications, bool isDark) {
     return Column(
-      children: notifications.map((n) {
+      children: notifications.asMap().entries.map((entry) {
+        final index = entry.key;
+        final notif = entry.value;
+        final sl = (index + 1).toString();
+        
         return Container(
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? const Color(0xFF1F1F1F) : Colors.white,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withAlpha(5),
+                color: Colors.black.withAlpha(isDark ? 50 : 5),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
             ],
-            border: Border.all(color: Colors.grey.shade200),
+            border: Border.all(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +114,7 @@ class NotificationsTable extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        "#${n['sl']}",
+                        "#$sl",
                         style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.blue.shade700),
                       ),
                     ),
@@ -112,16 +122,16 @@ class NotificationsTable extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      n['date']!,
-                      style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+                      notif.date,
+                      style: TextStyle(fontSize: 12, color: isDark ? Colors.grey.shade400 : Colors.grey.shade500),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 10),
               Text(
-                n['message']!,
-                style: const TextStyle(fontSize: 13, color: Colors.black87, fontWeight: FontWeight.w500),
+                notif.message,
+                style: TextStyle(fontSize: 13, color: isDark ? Colors.white : Colors.black87, fontWeight: FontWeight.w500),
               ),
             ],
           ),

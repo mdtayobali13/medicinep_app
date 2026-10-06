@@ -67,7 +67,7 @@ class PatientFormPersonalSection extends StatelessWidget {
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Expanded(child: MedicineDateField(label: "Date of Birth", hint: "Select date", initialValue: dobController.text)),
+                  Expanded(child: MedicineDateField(label: "Date of Birth", hint: "Select date", controller: dobController)),
                   const SizedBox(width: 16),
                   Expanded(
                     child: MedicineDropdownField<String>(
@@ -114,7 +114,7 @@ class PatientFormPersonalSection extends StatelessWidget {
         const SizedBox(height: 16),
         MedicineTextField(label: "Mother's Name", hint: "Enter mother's name", controller: motherController),
         const SizedBox(height: 16),
-        MedicineDateField(label: "Date of Birth", hint: "Select date", initialValue: dobController.text),
+        MedicineDateField(label: "Date of Birth", hint: "Select date", controller: dobController),
         const SizedBox(height: 16),
         MedicineDropdownField<String>(
           label: "Gender",

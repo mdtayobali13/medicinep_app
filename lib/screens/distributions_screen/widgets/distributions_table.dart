@@ -111,10 +111,21 @@ class DistributionsTable extends ConsumerWidget {
           sl: index.toString(),
           patient: item.patientName ?? item.patient?.name ?? 'N/A',
           bpNumber: item.bpNo ?? item.patient?.bpNo ?? 'N/A',
-          receiver: item.patientName ?? 'N/A',
-          prescriptionNumber: '',
+          receiver: item.receiverType ?? item.patientName ?? 'N/A',
+          prescriptionNumber: item.prescriptionCode ?? '',
           date: item.distributionDate != null ? item.distributionDate!.split('T').first : '',
-          distributionBy: 'System',
+          distributionBy: item.createdBy ?? 'System',
+          onDelete: () async {
+            final success = await ref.read(distributionsProvider.notifier).deleteDistribution(item.id);
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(success ? "Distribution record deleted successfully." : "Failed to delete record."),
+                  backgroundColor: success ? Colors.green : Colors.red,
+                ),
+              );
+            }
+          },
         );
       }).toList(),
     );
@@ -148,8 +159,16 @@ class DistributionsTable extends ConsumerWidget {
                 showDialog(
                   context: context,
                   builder: (context) => DeleteConfirmationDialog(
-                    onConfirm: () {
-                      ref.read(distributionsProvider.notifier).deleteDistribution(item.id);
+                    onConfirm: () async {
+                      final success = await ref.read(distributionsProvider.notifier).deleteDistribution(item.id);
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(success ? "Distribution record deleted successfully." : "Failed to delete record."),
+                            backgroundColor: success ? Colors.green : Colors.red,
+                          ),
+                        );
+                      }
                     },
                   ),
                 );
