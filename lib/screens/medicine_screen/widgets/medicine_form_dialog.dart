@@ -6,6 +6,7 @@ import 'package:medicine_system/models/medicine_model.dart';
 import 'package:medicine_system/providers/medicine_categories_provider.dart';
 import 'package:medicine_system/providers/medicine_units_provider.dart';
 import 'package:medicine_system/providers/medicines_provider.dart';
+import 'package:medicine_system/utils/app_snack_bar.dart';
 import 'form_fields/medicine_image_upload.dart';
 import 'form_fields/medicine_text_field.dart';
 import 'form_fields/medicine_dropdown_field.dart';
@@ -70,9 +71,7 @@ class _MedicineFormDialogState extends ConsumerState<MedicineFormDialog> {
   Future<void> _handleSave() async {
     final name = _nameController.text.trim();
     if (name.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter medicine name')),
-      );
+      AppSnackBar.instance.error('Please enter medicine name');
       return;
     }
 
@@ -111,11 +110,10 @@ class _MedicineFormDialogState extends ConsumerState<MedicineFormDialog> {
     if (mounted) {
       setState(() => _isSaving = false);
       if (success) {
+        AppSnackBar.instance.success(widget.isEdit ? "Medicine updated successfully!" : "Medicine created successfully!");
         Navigator.pop(context);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to save medicine. Please check error message above.')),
-        );
+        AppSnackBar.instance.error(widget.isEdit ? "Failed to update medicine." : "Failed to create medicine.");
       }
     }
   }
@@ -152,21 +150,24 @@ class _MedicineFormDialogState extends ConsumerState<MedicineFormDialog> {
       );
     }).toList();
 
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double dialogWidth = screenWidth > 850 ? 800 : (screenWidth * 0.9);
+
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       backgroundColor: dialogBg,
       surfaceTintColor: dialogBg,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: Container(
-        width: 800,
-        padding: const EdgeInsets.all(0),
+        width: dialogWidth,
+        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.85),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
               decoration: BoxDecoration(
                 color: headerBg,
                 borderRadius: const BorderRadius.only(
@@ -193,126 +194,163 @@ class _MedicineFormDialogState extends ConsumerState<MedicineFormDialog> {
               ),
             ),
 
-            // Form Fields
-            Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Row 1
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const MedicineImageUpload(),
-                      const SizedBox(width: 24),
-                      Expanded(
-                        child: Column(
+            // Form Fields - Scrollable
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Row 1: Image & Basic Info
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        if (constraints.maxWidth < 550) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Center(child: MedicineImageUpload()),
+                              const SizedBox(height: 16),
+                              MedicineTextField(
+                                label: "Medicine Name",
+                                hint: "Enter medicine name",
+                                controller: _nameController,
+                              ),
+                              const SizedBox(height: 16),
+                              MedicineDropdownField<int>(
+                                label: "Category",
+                                hint: "Select category",
+                                value: _selectedCategoryId,
+                                items: categoryItems,
+                                isLoading: categoriesState.isLoading,
+                                onChanged: (val) => setState(() => _selectedCategoryId = val),
+                              ),
+                            ],
+                          );
+                        }
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            MedicineTextField(
-                              label: "Name",
-                              hint: "Enter medicine name",
-                              controller: _nameController,
-                            ),
-                            const SizedBox(height: 16),
-                            MedicineDropdownField<int>(
-                              label: "Category",
-                              hint: "Select a category",
-                              value: _selectedCategoryId,
-                              items: categoryItems,
-                              isLoading: categoriesState.isLoading,
-                              onChanged: (val) => setState(() => _selectedCategoryId = val),
+                            const MedicineImageUpload(),
+                            const SizedBox(width: 24),
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  MedicineTextField(
+                                    label: "Medicine Name",
+                                    hint: "Enter medicine name",
+                                    controller: _nameController,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  MedicineDropdownField<int>(
+                                    label: "Category",
+                                    hint: "Select category",
+                                    value: _selectedCategoryId,
+                                    items: categoryItems,
+                                    isLoading: categoriesState.isLoading,
+                                    onChanged: (val) => setState(() => _selectedCategoryId = val),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 20),
 
-                  // Row 2
-                  Row(
-                    children: [
-                      Expanded(
-                        child: MedicineDropdownField<int>(
-                          label: "Medicine Unit",
-                          hint: "Select a medicine unit",
-                          value: _selectedUnitId,
-                          items: unitItems,
-                          isLoading: unitsState.isLoading,
-                          onChanged: (val) => setState(() => _selectedUnitId = val),
+                    // Row 2: Unit & Alert Quantity
+                    Row(
+                      children: [
+                        Expanded(
+                          child: MedicineDropdownField<int>(
+                            label: "Medicine Unit",
+                            hint: "Select unit",
+                            value: _selectedUnitId,
+                            items: unitItems,
+                            isLoading: unitsState.isLoading,
+                            onChanged: (val) => setState(() => _selectedUnitId = val),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 24),
-                      Expanded(
-                        child: MedicineTextField(
-                          label: "Alert Quantity",
-                          hint: "Enter alert quantity",
-                          controller: _alertQtyController,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: MedicineTextField(
+                            label: "Alert Quantity",
+                            hint: "Enter alert qty",
+                            controller: _alertQtyController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
 
-                  // Row 3
-                  Row(
-                    children: [
-                      Expanded(
-                        child: MedicineTextField(
-                          label: "Expiration Reminder Days",
-                          hint: "Enter days",
-                          controller: _expirationDaysController,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    // Row 3: Expiration Days & Origin
+                    Row(
+                      children: [
+                        Expanded(
+                          child: MedicineTextField(
+                            label: "Expiration Reminder (Days)",
+                            hint: "Enter reminder days (e.g. 30)",
+                            controller: _expirationDaysController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 24),
-                      Expanded(
-                        child: MedicineTextField(
-                          label: "Origin",
-                          hint: "Enter origin",
-                          controller: _originController,
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: MedicineTextField(
+                            label: "Origin / Type",
+                            hint: "Enter origin (e.g. Local)",
+                            controller: _originController,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 24),
-                      Expanded(
-                        child: MedicineDropdownField<String>(
-                          label: "Status",
-                          hint: "Select status",
-                          value: _selectedStatus,
-                          items: statusItems,
-                          onChanged: (val) => setState(() => _selectedStatus = val ?? 'Active'),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 32),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
 
-                  // Save Button
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: ElevatedButton.icon(
-                      onPressed: _isSaving ? null : _handleSave,
-                      icon: _isSaving
-                          ? const SizedBox(
-                              width: 18,
-                              height: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                            )
-                          : const Icon(CupertinoIcons.floppy_disk, size: 18),
-                      label: Text(_isSaving ? "Saving..." : "Save"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue.shade600,
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                    // Row 4: Status
+                    Row(
+                      children: [
+                        Expanded(
+                          child: MedicineDropdownField<String>(
+                            label: "Status",
+                            hint: "Select status",
+                            value: _selectedStatus,
+                            items: statusItems,
+                            onChanged: (val) => setState(() => _selectedStatus = val ?? 'Active'),
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        const Expanded(child: SizedBox.shrink()),
+                      ],
+                    ),
+                    const SizedBox(height: 28),
+
+                    // Save Button
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: ElevatedButton.icon(
+                        onPressed: _isSaving ? null : _handleSave,
+                        icon: _isSaving
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                              )
+                            : const Icon(CupertinoIcons.floppy_disk, size: 18),
+                        label: Text(_isSaving ? "Saving..." : "Save"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue.shade600,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

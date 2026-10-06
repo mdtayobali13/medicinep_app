@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicine_system/models/police_unit_model.dart';
 import 'package:medicine_system/providers/police_units_provider.dart';
+import 'package:medicine_system/utils/app_snack_bar.dart';
 import 'package:medicine_system/screens/police_units_screen/widgets/police_unit_form_dialog.dart';
 import 'package:medicine_system/screens/police_units_screen/widgets/delete_confirmation_dialog.dart';
 
@@ -167,8 +168,13 @@ class PoliceUnitsTable extends ConsumerWidget {
                     builder: (dialogCtx) => PoliceUnitFormDialog(
                       isEdit: true,
                       initialName: item.name,
-                      onSave: (newName) {
-                        ref.read(policeUnitsProvider.notifier).updatePoliceUnit(item.id, newName);
+                      onSave: (newName) async {
+                        final ok = await ref.read(policeUnitsProvider.notifier).updatePoliceUnit(item.id, newName);
+                        if (ok) {
+                          AppSnackBar.instance.success("Police Unit updated successfully!");
+                        } else {
+                          AppSnackBar.instance.error("Failed to update police unit.");
+                        }
                       },
                     ),
                   );
@@ -183,8 +189,13 @@ class PoliceUnitsTable extends ConsumerWidget {
                   showDialog(
                     context: context,
                     builder: (dialogCtx) => DeleteConfirmationDialog(
-                      onConfirm: () {
-                        ref.read(policeUnitsProvider.notifier).deletePoliceUnit(item.id);
+                      onConfirm: () async {
+                        final ok = await ref.read(policeUnitsProvider.notifier).deletePoliceUnit(item.id);
+                        if (ok) {
+                          AppSnackBar.instance.success("Police Unit deleted successfully!");
+                        } else {
+                          AppSnackBar.instance.error("Failed to delete police unit.");
+                        }
                       },
                     ),
                   );

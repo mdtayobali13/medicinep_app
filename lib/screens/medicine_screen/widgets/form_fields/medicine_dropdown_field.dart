@@ -46,49 +46,49 @@ class MedicineDropdownField<T> extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.only(bottom: 6),
           child: Text(
             label,
             style: TextStyle(
               color: labelColor,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
         ),
         SizedBox(
-          height: 42,
+          height: 46,
           child: Theme(
             data: Theme.of(context).copyWith(
               canvasColor: dropdownBg,
               textTheme: Theme.of(context).textTheme.copyWith(
-                    titleMedium: TextStyle(color: textColor, fontSize: 13),
-                    bodyMedium: TextStyle(color: textColor, fontSize: 13),
-                    bodyLarge: TextStyle(color: textColor, fontSize: 13),
+                    titleMedium: TextStyle(color: textColor, fontSize: 13.5),
+                    bodyMedium: TextStyle(color: textColor, fontSize: 13.5),
+                    bodyLarge: TextStyle(color: textColor, fontSize: 13.5),
                   ),
             ),
             child: DropdownButtonFormField2<T>(
               isExpanded: true,
               value: selectedValue,
-              style: TextStyle(color: textColor, fontSize: 13),
+              style: TextStyle(color: textColor, fontSize: 13.5),
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.symmetric(
                   vertical: 0,
-                  horizontal: 12,
+                  horizontal: 14,
                 ),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: borderColor),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: borderColor),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(6),
-                  borderSide: const BorderSide(color: Colors.blue),
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.blue, width: 1.5),
                 ),
                 fillColor: fieldBg,
                 filled: true,
@@ -101,7 +101,7 @@ class MedicineDropdownField<T> extends StatelessWidget {
                     )
                   : Text(
                       hint.isNotEmpty ? hint : "Select $label",
-                      style: TextStyle(color: hintColor, fontSize: 13),
+                      style: TextStyle(color: hintColor, fontSize: 13.5),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -121,7 +121,7 @@ class MedicineDropdownField<T> extends StatelessWidget {
                 ),
               ),
               menuItemStyleData: const MenuItemStyleData(
-                padding: EdgeInsets.symmetric(horizontal: 12),
+                padding: EdgeInsets.symmetric(horizontal: 14),
               ),
             ),
           ),

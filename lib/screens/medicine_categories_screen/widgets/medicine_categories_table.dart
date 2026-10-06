@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicine_system/models/medicine_category_model.dart';
 import 'package:medicine_system/providers/medicine_categories_provider.dart';
+import 'package:medicine_system/utils/app_snack_bar.dart';
 import 'package:medicine_system/screens/medicine_categories_screen/widgets/medicine_category_form_dialog.dart';
 import 'package:medicine_system/screens/medicine_categories_screen/widgets/delete_confirmation_dialog.dart';
 
@@ -170,8 +171,13 @@ class MedicineCategoriesTable extends ConsumerWidget {
                     builder: (dialogCtx) => MedicineCategoryFormDialog(
                       isEdit: true,
                       initialName: item.name,
-                      onSave: (newName) {
-                        ref.read(medicineCategoriesProvider.notifier).updateCategory(item.id, newName);
+                      onSave: (newName) async {
+                        final ok = await ref.read(medicineCategoriesProvider.notifier).updateCategory(item.id, newName);
+                        if (ok) {
+                          AppSnackBar.instance.success("Medicine Category updated successfully!");
+                        } else {
+                          AppSnackBar.instance.error("Failed to update category.");
+                        }
                       },
                     ),
                   );
@@ -186,8 +192,13 @@ class MedicineCategoriesTable extends ConsumerWidget {
                   showDialog(
                     context: context,
                     builder: (dialogCtx) => DeleteConfirmationDialog(
-                      onConfirm: () {
-                        ref.read(medicineCategoriesProvider.notifier).deleteCategory(item.id);
+                      onConfirm: () async {
+                        final ok = await ref.read(medicineCategoriesProvider.notifier).deleteCategory(item.id);
+                        if (ok) {
+                          AppSnackBar.instance.success("Medicine Category deleted successfully!");
+                        } else {
+                          AppSnackBar.instance.error("Failed to delete category.");
+                        }
                       },
                     ),
                   );

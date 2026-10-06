@@ -40,20 +40,20 @@ class MedicineTextField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.only(bottom: 6),
           child: Text(
             label,
             style: TextStyle(
               color: labelColor,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
         ),
         SizedBox(
-          height: 42, // Force strict height to match dropdown
+          height: 46,
           child: TextFormField(
             controller: controller,
             initialValue: controller != null ? null : initialValue,
@@ -67,26 +67,26 @@ class MedicineTextField extends StatelessWidget {
               hintText: hint.isNotEmpty ? hint : "Enter $label",
               hintStyle: TextStyle(color: hintColor, fontSize: 13),
               contentPadding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 0,
+                horizontal: 14,
+                vertical: 12,
               ),
               suffixIcon: suffixIcon,
               filled: !enabled,
               fillColor: enabled ? null : disabledBg,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(color: borderColor),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(color: borderColor),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
-                borderSide: const BorderSide(color: Colors.blue),
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.blue, width: 1.5),
               ),
               disabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(color: isDark ? Colors.white12 : Colors.grey.shade200),
               ),
             ),

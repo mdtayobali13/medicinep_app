@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicine_system/models/medicine_unit_model.dart';
 import 'package:medicine_system/providers/medicine_units_provider.dart';
+import 'package:medicine_system/utils/app_snack_bar.dart';
 import 'package:medicine_system/screens/medicine_units_screen/widgets/medicine_unit_form_dialog.dart';
 import 'package:medicine_system/screens/medicine_units_screen/widgets/delete_confirmation_dialog.dart';
 
@@ -165,8 +166,13 @@ class MedicineUnitsTable extends ConsumerWidget {
                     builder: (dialogCtx) => MedicineUnitFormDialog(
                       isEdit: true,
                       initialName: item.name,
-                      onSave: (newName) {
-                        ref.read(medicineUnitsProvider.notifier).updateUnit(item.id, newName);
+                      onSave: (newName) async {
+                        final ok = await ref.read(medicineUnitsProvider.notifier).updateUnit(item.id, newName);
+                        if (ok) {
+                          AppSnackBar.instance.success("Medicine Unit updated successfully!");
+                        } else {
+                          AppSnackBar.instance.error("Failed to update medicine unit.");
+                        }
                       },
                     ),
                   );
@@ -181,8 +187,13 @@ class MedicineUnitsTable extends ConsumerWidget {
                   showDialog(
                     context: context,
                     builder: (dialogCtx) => DeleteConfirmationDialog(
-                      onConfirm: () {
-                        ref.read(medicineUnitsProvider.notifier).deleteUnit(item.id);
+                      onConfirm: () async {
+                        final ok = await ref.read(medicineUnitsProvider.notifier).deleteUnit(item.id);
+                        if (ok) {
+                          AppSnackBar.instance.success("Medicine Unit deleted successfully!");
+                        } else {
+                          AppSnackBar.instance.error("Failed to delete medicine unit.");
+                        }
                       },
                     ),
                   );
