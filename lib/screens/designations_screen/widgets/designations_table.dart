@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicine_system/models/designation_model.dart';
 import 'package:medicine_system/providers/designations_provider.dart';
+import 'package:medicine_system/utils/app_snack_bar.dart';
 import 'package:medicine_system/screens/designations_screen/widgets/designation_form_dialog.dart';
 import 'package:medicine_system/screens/designations_screen/widgets/delete_confirmation_dialog.dart';
 
@@ -188,8 +189,13 @@ class DesignationsTable extends ConsumerWidget {
                       isEdit: true,
                       initialName: item.name,
                       initialIndex: item.index?.toString(),
-                      onSave: (newName, newIndex) {
-                        ref.read(designationsProvider.notifier).updateDesignation(item.id, newName, index: newIndex);
+                      onSave: (newName, newIndex) async {
+                        final ok = await ref.read(designationsProvider.notifier).updateDesignation(item.id, newName, index: newIndex);
+                        if (ok) {
+                          AppSnackBar.instance.success("Designation updated successfully!");
+                        } else {
+                          AppSnackBar.instance.error("Failed to update designation.");
+                        }
                       },
                     ),
                   );
@@ -204,8 +210,13 @@ class DesignationsTable extends ConsumerWidget {
                   showDialog(
                     context: context,
                     builder: (dialogCtx) => DeleteConfirmationDialog(
-                      onConfirm: () {
-                        ref.read(designationsProvider.notifier).deleteDesignation(item.id);
+                      onConfirm: () async {
+                        final ok = await ref.read(designationsProvider.notifier).deleteDesignation(item.id);
+                        if (ok) {
+                          AppSnackBar.instance.success("Designation deleted successfully!");
+                        } else {
+                          AppSnackBar.instance.error("Failed to delete designation.");
+                        }
                       },
                     ),
                   );

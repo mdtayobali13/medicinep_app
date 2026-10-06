@@ -14,11 +14,18 @@ class DistributionsTopBar extends ConsumerWidget {
     final borderColor = isDark ? Colors.white12 : Colors.grey.shade300;
     final textColor = isDark ? Colors.white : Colors.black;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    final state = ref.watch(distributionsProvider);
+
+    return Wrap(
+      alignment: WrapAlignment.spaceBetween,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 12,
+      runSpacing: 12,
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          width: 85,
+          height: 38,
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
             color: cardBg,
             border: Border.all(color: borderColor),
@@ -26,22 +33,29 @@ class DistributionsTopBar extends ConsumerWidget {
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton2<int>(
-              hint: Text("10", style: TextStyle(color: textColor)),
+              isExpanded: true,
+              value: state.perPage,
+              hint: Text("10", style: TextStyle(color: textColor, fontSize: 13)),
               items: [10, 20, 50, 100].map((int value) {
                 return DropdownMenuItem<int>(
                   value: value,
                   child: Text(
                     value.toString(),
-                    style: TextStyle(color: textColor),
+                    style: TextStyle(color: textColor, fontSize: 13),
                   ),
                 );
               }).toList(),
-              onChanged: (_) {},
+              onChanged: (val) {
+                if (val != null) {
+                  ref.read(distributionsProvider.notifier).fetchDistributions(page: 1, perPage: val);
+                }
+              },
               iconStyleData: IconStyleData(
-                icon: Icon(CupertinoIcons.chevron_down, size: 16, color: isDark ? Colors.white70 : Colors.grey.shade600),
+                icon: Icon(CupertinoIcons.chevron_down, size: 14, color: isDark ? Colors.white70 : Colors.grey.shade600),
               ),
               buttonStyleData: const ButtonStyleData(
                 padding: EdgeInsets.zero,
+                height: 38,
               ),
               dropdownStyleData: DropdownStyleData(
                 decoration: BoxDecoration(
@@ -50,34 +64,33 @@ class DistributionsTopBar extends ConsumerWidget {
                 ),
               ),
               menuItemStyleData: const MenuItemStyleData(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: 12),
               ),
             ),
           ),
         ),
-        Expanded(
-          child: Container(
-            margin: const EdgeInsets.only(left: 12),
-            decoration: BoxDecoration(
-              color: cardBg,
-              border: Border.all(color: borderColor),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: TextField(
-              onChanged: (val) {
-                ref.read(distributionsProvider.notifier).fetchDistributions(search: val);
-              },
-              style: TextStyle(color: isDark ? Colors.white : Colors.black87, fontSize: 13),
-              decoration: InputDecoration(
-                hintText: "Search...",
-                hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.grey.shade400, fontSize: 13),
-                prefixIcon: Icon(CupertinoIcons.search, size: 18, color: isDark ? Colors.white38 : Colors.grey.shade400),
-                border: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                isDense: true,
-              ),
+        Container(
+          width: 240,
+          height: 38,
+          decoration: BoxDecoration(
+            color: cardBg,
+            border: Border.all(color: borderColor),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: TextField(
+            onChanged: (val) {
+              ref.read(distributionsProvider.notifier).fetchDistributions(search: val);
+            },
+            style: TextStyle(color: isDark ? Colors.white : Colors.black87, fontSize: 13),
+            decoration: InputDecoration(
+              hintText: "Search...",
+              hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.grey.shade400, fontSize: 13),
+              prefixIcon: Icon(CupertinoIcons.search, size: 16, color: isDark ? Colors.white38 : Colors.grey.shade400),
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              isDense: true,
             ),
           ),
         ),

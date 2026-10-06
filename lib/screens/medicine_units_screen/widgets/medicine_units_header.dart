@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicine_system/providers/medicine_units_provider.dart';
+import 'package:medicine_system/utils/app_snack_bar.dart';
 import 'package:medicine_system/screens/medicine_units_screen/widgets/medicine_unit_form_dialog.dart';
 
 class MedicineUnitsHeader extends ConsumerWidget {
@@ -31,8 +32,13 @@ class MedicineUnitsHeader extends ConsumerWidget {
               showDialog(
                 context: context,
                 builder: (dialogCtx) => MedicineUnitFormDialog(
-                  onSave: (name) {
-                    ref.read(medicineUnitsProvider.notifier).createUnit(name);
+                  onSave: (name) async {
+                    final ok = await ref.read(medicineUnitsProvider.notifier).createUnit(name);
+                    if (ok) {
+                      AppSnackBar.instance.success("Medicine Unit created successfully!");
+                    } else {
+                      AppSnackBar.instance.error("Failed to create medicine unit.");
+                    }
                   },
                 ),
               );

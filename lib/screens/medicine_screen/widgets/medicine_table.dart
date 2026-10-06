@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicine_system/models/medicine_model.dart';
 import 'package:medicine_system/providers/medicines_provider.dart';
+import 'package:medicine_system/utils/app_snack_bar.dart';
 import 'package:medicine_system/screens/medicine_screen/widgets/delete_confirmation_dialog.dart';
 import 'package:medicine_system/screens/medicine_screen/widgets/medicine_form_dialog.dart';
 
@@ -193,8 +194,13 @@ class MedicineTable extends ConsumerWidget {
                   showDialog(
                     context: context,
                     builder: (dialogCtx) => DeleteConfirmationDialog(
-                      onConfirm: () {
-                        ref.read(medicinesProvider.notifier).deleteMedicine(item.id);
+                      onConfirm: () async {
+                        final ok = await ref.read(medicinesProvider.notifier).deleteMedicine(item.id);
+                        if (ok) {
+                          AppSnackBar.instance.success("Medicine deleted successfully!");
+                        } else {
+                          AppSnackBar.instance.error("Failed to delete medicine.");
+                        }
                       },
                     ),
                   );
