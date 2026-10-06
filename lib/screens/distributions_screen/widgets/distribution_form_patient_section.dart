@@ -10,6 +10,11 @@ class DistributionFormPatientSection extends StatelessWidget {
   final ValueChanged<String?> onReceiverChanged;
   final TextEditingController prescriptionController;
   final TextEditingController notesController;
+  final TextEditingController spouseNameController;
+  final TextEditingController parentNameController;
+  final List<TextEditingController> childrenControllers;
+  final VoidCallback onAddChild;
+  final ValueChanged<int> onRemoveChild;
 
   const DistributionFormPatientSection({
     super.key,
@@ -19,6 +24,11 @@ class DistributionFormPatientSection extends StatelessWidget {
     required this.onReceiverChanged,
     required this.prescriptionController,
     required this.notesController,
+    required this.spouseNameController,
+    required this.parentNameController,
+    required this.childrenControllers,
+    required this.onAddChild,
+    required this.onRemoveChild,
   });
 
   @override
@@ -36,6 +46,11 @@ class DistributionFormPatientSection extends StatelessWidget {
                 onReceiverChanged: onReceiverChanged,
                 prescriptionController: prescriptionController,
                 notesController: notesController,
+                spouseNameController: spouseNameController,
+                parentNameController: parentNameController,
+                childrenControllers: childrenControllers,
+                onAddChild: onAddChild,
+                onRemoveChild: onRemoveChild,
               ),
               const SizedBox(height: 24),
               DistributionImageBox(patient: selectedPatient),
@@ -54,6 +69,11 @@ class DistributionFormPatientSection extends StatelessWidget {
                 onReceiverChanged: onReceiverChanged,
                 prescriptionController: prescriptionController,
                 notesController: notesController,
+                spouseNameController: spouseNameController,
+                parentNameController: parentNameController,
+                childrenControllers: childrenControllers,
+                onAddChild: onAddChild,
+                onRemoveChild: onRemoveChild,
               ),
             ),
             const SizedBox(width: 24),

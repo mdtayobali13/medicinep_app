@@ -6,6 +6,7 @@ import 'package:medicine_system/models/user_model.dart';
 import 'package:medicine_system/screens/users_screen/widgets/users_top_bar.dart';
 import 'package:medicine_system/screens/users_screen/widgets/user_form_dialog.dart';
 import 'package:medicine_system/screens/designations_screen/widgets/delete_confirmation_dialog.dart';
+import 'package:medicine_system/utils/app_snack_bar.dart';
 
 class UsersTable extends ConsumerWidget {
   const UsersTable({super.key});
@@ -242,12 +243,10 @@ class UsersTable extends ConsumerWidget {
                         builder: (context) => DeleteConfirmationDialog(
                           onConfirm: () async {
                             final success = await ref.read(adminUsersProvider.notifier).deleteUser(user.id);
-                            if (success && context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("User deleted successfully"),
-                                ),
-                              );
+                            if (success) {
+                              AppSnackBar.instance.success("User deleted successfully!");
+                            } else {
+                              AppSnackBar.instance.error("Failed to delete user.");
                             }
                           },
                         ),
@@ -334,12 +333,10 @@ class UsersTable extends ConsumerWidget {
                     builder: (context) => DeleteConfirmationDialog(
                       onConfirm: () async {
                         final success = await ref.read(adminUsersProvider.notifier).deleteUser(user.id);
-                        if (success && context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("User deleted successfully"),
-                            ),
-                          );
+                        if (success) {
+                          AppSnackBar.instance.success("User deleted successfully!");
+                        } else {
+                          AppSnackBar.instance.error("Failed to delete user.");
                         }
                       },
                     ),

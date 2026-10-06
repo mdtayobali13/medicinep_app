@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicine_system/providers/police_units_provider.dart';
+import 'package:medicine_system/utils/app_snack_bar.dart';
 import 'package:medicine_system/screens/police_units_screen/widgets/police_unit_form_dialog.dart';
 
 class PoliceUnitsHeader extends ConsumerWidget {
@@ -31,8 +32,13 @@ class PoliceUnitsHeader extends ConsumerWidget {
               showDialog(
                 context: context,
                 builder: (dialogCtx) => PoliceUnitFormDialog(
-                  onSave: (name) {
-                    ref.read(policeUnitsProvider.notifier).createPoliceUnit(name);
+                  onSave: (name) async {
+                    final ok = await ref.read(policeUnitsProvider.notifier).createPoliceUnit(name);
+                    if (ok) {
+                      AppSnackBar.instance.success("Police Unit created successfully!");
+                    } else {
+                      AppSnackBar.instance.error("Failed to create police unit.");
+                    }
                   },
                 ),
               );

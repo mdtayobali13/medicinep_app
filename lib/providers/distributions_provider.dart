@@ -7,6 +7,7 @@ class DistributionsState {
   final bool isLoading;
   final List<DistributionModel> list;
   final String searchText;
+  final int perPage;
   final PaginationMeta? meta;
   final String? error;
 
@@ -14,6 +15,7 @@ class DistributionsState {
     this.isLoading = false,
     this.list = const [],
     this.searchText = '',
+    this.perPage = 10,
     this.meta,
     this.error,
   });
@@ -22,6 +24,7 @@ class DistributionsState {
     bool? isLoading,
     List<DistributionModel>? list,
     String? searchText,
+    int? perPage,
     PaginationMeta? meta,
     String? error,
   }) {
@@ -29,6 +32,7 @@ class DistributionsState {
       isLoading: isLoading ?? this.isLoading,
       list: list ?? this.list,
       searchText: searchText ?? this.searchText,
+      perPage: perPage ?? this.perPage,
       meta: meta ?? this.meta,
       error: error,
     );
@@ -42,11 +46,12 @@ class DistributionsNotifier extends StateNotifier<DistributionsState> {
 
   final _repo = DistributionsRepository.instance;
 
-  Future<void> fetchDistributions({int page = 1, String? search}) async {
+  Future<void> fetchDistributions({int page = 1, int? perPage, String? search}) async {
     final querySearch = search ?? state.searchText;
-    state = state.copyWith(isLoading: true, searchText: querySearch, error: null);
+    final queryPerPage = perPage ?? state.perPage;
+    state = state.copyWith(isLoading: true, searchText: querySearch, perPage: queryPerPage, error: null);
 
-    final res = await _repo.getDistributions(page: page, searchText: querySearch);
+    final res = await _repo.getDistributions(page: page, perPage: queryPerPage, searchText: querySearch);
     if (res != null) {
       state = state.copyWith(
         isLoading: false,

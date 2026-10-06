@@ -58,8 +58,9 @@ class _StockReportsTopBarState extends State<StockReportsTopBar> {
 
   Widget _buildItemsPerPage(bool isDark, Color cardBg, Color borderColor, Color textColor) {
     return Container(
+      width: 85,
       height: 38,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         border: Border.all(color: borderColor),
         borderRadius: BorderRadius.circular(6),

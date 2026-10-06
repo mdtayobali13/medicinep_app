@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medicine_system/providers/designations_provider.dart';
+import 'package:medicine_system/utils/app_snack_bar.dart';
 import 'package:medicine_system/screens/designations_screen/widgets/designation_form_dialog.dart';
 
 class DesignationsHeader extends ConsumerWidget {
@@ -31,8 +32,13 @@ class DesignationsHeader extends ConsumerWidget {
               showDialog(
                 context: context,
                 builder: (dialogCtx) => DesignationFormDialog(
-                  onSave: (name, index) {
-                    ref.read(designationsProvider.notifier).createDesignation(name, index: index);
+                  onSave: (name, index) async {
+                    final ok = await ref.read(designationsProvider.notifier).createDesignation(name, index: index);
+                    if (ok) {
+                      AppSnackBar.instance.success("Designation created successfully!");
+                    } else {
+                      AppSnackBar.instance.error("Failed to create designation.");
+                    }
                   },
                 ),
               );
